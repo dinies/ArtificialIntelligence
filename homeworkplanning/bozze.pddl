@@ -1,0 +1,7 @@
+(:goal (and (clean cloth1)
+            (clean tray1)
+            (clean tray2)
+            (at cloth1 node2-2)
+            (at tray1 node4-4)
+            (at tray2 node4-4)
+            )
