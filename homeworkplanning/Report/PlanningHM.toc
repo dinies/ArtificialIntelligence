@@ -1,0 +1,24 @@
+\contentsline {part}{I\hspace {1em}Introduction}{1}
+\contentsline {part}{II\hspace {1em}Development}{2}
+\contentsline {section}{\numberline {1}Vanilla Grid}{2}
+\contentsline {subsection}{\numberline {1.1}Strips formulation}{2}
+\contentsline {subsubsection}{\numberline {1.1.1}Predicates}{2}
+\contentsline {subsubsection}{\numberline {1.1.2}Actions}{2}
+\contentsline {subsubsection}{\numberline {1.1.3}Initial and goal states}{3}
+\contentsline {subsection}{\numberline {1.2}Planner result}{3}
+\contentsline {section}{\numberline {2}Extended Grid}{4}
+\contentsline {subsection}{\numberline {2.1}Strips formulation}{4}
+\contentsline {subsubsection}{\numberline {2.1.1}Predicates}{4}
+\contentsline {subsubsection}{\numberline {2.1.2}Actions}{4}
+\contentsline {subsubsection}{\numberline {2.1.3}Initial and goal states}{8}
+\contentsline {subsection}{\numberline {2.2}Planner result}{9}
+\contentsline {section}{\numberline {3}POP}{10}
+\contentsline {subsection}{\numberline {3.1}Design choices}{10}
+\contentsline {subsection}{\numberline {3.2}Abstraction level}{10}
+\contentsline {subsection}{\numberline {3.3}Conflict resolution}{10}
+\contentsline {subsection}{\numberline {3.4}Graph representation}{11}
+\contentsline {subsection}{\numberline {3.5}Plan order}{12}
+\contentsline {section}{\numberline {4}HTN}{13}
+\contentsline {subsection}{\numberline {4.1}Primitives}{13}
+\contentsline {subsection}{\numberline {4.2}High level actions}{13}
+\contentsline {subsection}{\numberline {4.3}Designing a hierarchical graph}{14}

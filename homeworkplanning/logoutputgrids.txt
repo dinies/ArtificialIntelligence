@@ -1,0 +1,201 @@
+VANILLA GRID
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:   23 into depth [1]
+                                  22            [1]
+                                  21            [1]
+                                  20            [1]
+                                  19            [1]
+                                  18            [1]
+                                  17            [1]
+                                  16            [1]
+                                  15            [1]
+                                  14            [1]
+                                  13            [1]
+                                  12            [1]
+                                  11            [1]
+                                  10            [1]
+                                   9            [1]
+                                   8            [1]
+                                   7            [1]
+                                   6            [1]
+                                   5            [1]
+                                   4            [1]
+                                   3            [1]
+                                   2            [1]
+                                   1            [1]
+                                   0
+
+ff: found legal plan as follows
+
+step    0: MOVE ROBOT NODE1-1 NODE1-2
+        1: MOVE ROBOT NODE1-2 NODE1-3
+        2: MOVE ROBOT NODE1-3 NODE1-4
+        3: MOVE ROBOT NODE1-4 NODE1-5
+        4: MOVE ROBOT NODE1-5 NODE1-6
+        5: MOVE ROBOT NODE1-6 NODE1-7
+        6: MOVE ROBOT NODE1-7 NODE2-7
+        7: MOVE ROBOT NODE2-7 NODE3-7
+        8: MOVE ROBOT NODE3-7 NODE4-7
+        9: MOVE ROBOT NODE4-7 NODE4-8
+       10: MOVE ROBOT NODE4-8 NODE5-8
+       11: MOVE ROBOT NODE5-8 NODE6-8
+       12: MOVE ROBOT NODE6-8 NODE6-7
+       13: MOVE ROBOT NODE6-7 NODE7-7
+       14: MOVE ROBOT NODE7-7 NODE8-7
+       15: MOVE ROBOT NODE8-7 NODE9-7
+       16: MOVE ROBOT NODE9-7 NODE10-7
+       17: MOVE ROBOT NODE10-7 NODE10-6
+       18: MOVE ROBOT NODE10-6 NODE10-5
+       19: MOVE ROBOT NODE10-5 NODE10-4
+       20: MOVE ROBOT NODE10-4 NODE10-3
+       21: MOVE ROBOT NODE10-3 NODE10-2
+       22: MOVE ROBOT NODE10-2 NODE10-1
+
+
+time spent:    0.00 seconds instantiating 32190 easy, 0 hard action templates
+               0.01 seconds reachability analysis, yielding 77 facts and 222 actions
+               0.00 seconds creating final representation with 77 relevant facts, 0 relevant fluents
+               0.00 seconds computing LNF
+               0.00 seconds building connectivity graph
+               0.00 seconds searching, evaluating 24 states, to a max depth of 1
+               0.01 seconds total time
+
+
+EXTENDED GRID
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:   39 into depth [1]
+                                  38            [1]
+                                  34            [1]
+                                  30            [1]
+                                  26            [1][2][3][4]
+                                  25            [1][2][3][4][5]
+                                  24            [1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16][17][18][19][20]
+                                  23            [1][2][3][4][5][6]
+                                  22            [1][2][3][4][5]
+                                  21            [1]
+                                  20            [1][2][3][4][5]
+                                  17            [1]
+                                  16            [1]
+                                  15            [1]
+                                  14            [1]
+                                  13            [1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16][17][18][19][20]
+                                  12            [1]
+                                  11            [1]
+                                  10            [1]
+                                   9            [1]
+                                   8            [1]
+                                   7            [1]
+                                   6            [1]
+                                   5            [1]
+                                   4            [1]
+                                   3            [1]
+                                   2            [1]
+                                   1            [1]
+                                   0
+
+ff: found legal plan as follows
+
+step    0: MOVE ROBOT1 NODE7-1 NODE7-2
+        1: MOVE ROBOT1 NODE7-2 NODE6-2
+        2: MOVE ROBOT1 NODE6-2 NODE5-2
+        3: MOVE ROBOT1 NODE5-2 NODE4-2
+        4: MOVE ROBOT1 NODE4-2 NODE4-3
+        5: TAKE-TRAY-FROM-SEAT ROBOT1 TRAY1 NODE3-3 NODE4-3
+        6: MOVE ROBOT1 NODE4-3 NODE4-4
+        7: MOVE ROBOT1 NODE4-4 NODE4-5
+        8: MOVE ROBOT1 NODE4-5 NODE4-6
+        9: MOVE ROBOT1 NODE4-6 NODE4-7
+       10: MOVE ROBOT1 NODE4-7 NODE4-8
+       11: MOVE ROBOT1 NODE4-8 NODE5-8
+       12: MOVE ROBOT1 NODE5-8 NODE6-8
+       13: MOVE ROBOT1 NODE6-8 NODE7-8
+       14: MOVE ROBOT1 NODE7-8 NODE8-8
+       15: PUT ROBOT1 TRAY1 NODE9-8 NODE8-8
+       16: MOVE ROBOT1 NODE8-8 NODE7-8
+       17: MOVE ROBOT1 NODE7-8 NODE6-8
+       18: MOVE ROBOT1 NODE6-8 NODE5-8
+       19: MOVE ROBOT1 NODE5-8 NODE4-8
+       20: MOVE ROBOT1 NODE4-8 NODE4-7
+       21: MOVE ROBOT1 NODE4-7 NODE4-6
+       22: MOVE ROBOT1 NODE4-6 NODE4-5
+       23: MOVE ROBOT1 NODE4-5 NODE3-5
+       24: MOVE ROBOT1 NODE3-5 NODE2-5
+       25: TAKE-TRAY-FROM-SEAT ROBOT1 TRAY2 NODE2-4 NODE2-5
+       26: MOVE ROBOT1 NODE2-5 NODE3-5
+       27: MOVE ROBOT1 NODE3-5 NODE4-5
+       28: MOVE ROBOT1 NODE4-5 NODE4-6
+       29: MOVE ROBOT1 NODE4-6 NODE4-7
+       30: MOVE ROBOT1 NODE4-7 NODE4-8
+       31: MOVE ROBOT1 NODE4-8 NODE5-8
+       32: MOVE ROBOT1 NODE5-8 NODE6-8
+       33: MOVE ROBOT1 NODE6-8 NODE7-8
+       34: MOVE ROBOT1 NODE7-8 NODE8-8
+       35: PUT ROBOT1 TRAY2 NODE9-8 NODE8-8
+       36: RUN-DISHWASHER ROBOT1 NODE9-8 NODE8-8 TRAY2 TRAY1
+       37: TAKE-TRAY-FROM-DISHWASHER ROBOT1 TRAY1 NODE9-8 NODE8-8
+       38: MOVE ROBOT1 NODE8-8 NODE7-8
+       39: MOVE ROBOT1 NODE7-8 NODE6-8
+       40: PUT ROBOT1 TRAY1 NODE6-9 NODE6-8
+       41: MOVE ROBOT1 NODE6-8 NODE7-8
+       42: MOVE ROBOT1 NODE7-8 NODE8-8
+       43: TAKE-TRAY-FROM-DISHWASHER ROBOT1 TRAY2 NODE9-8 NODE8-8
+       44: MOVE ROBOT1 NODE8-8 NODE7-8
+       45: MOVE ROBOT1 NODE7-8 NODE6-8
+       46: PUT ROBOT1 TRAY2 NODE6-9 NODE6-8
+       47: MOVE ROBOT1 NODE6-8 NODE5-8
+       48: MOVE ROBOT1 NODE5-8 NODE4-8
+       49: MOVE ROBOT1 NODE4-8 NODE4-7
+       50: MOVE ROBOT1 NODE4-7 NODE4-6
+       51: MOVE ROBOT1 NODE4-6 NODE4-5
+       52: MOVE ROBOT1 NODE4-5 NODE3-5
+       53: MOVE ROBOT1 NODE3-5 NODE2-5
+       54: MOVE ROBOT1 NODE2-5 NODE1-5
+       55: MOVE ROBOT1 NODE1-5 NODE1-4
+       56: MOVE ROBOT1 NODE1-4 NODE1-3
+       57: TAKE-CLOTH-FROM-TABLE ROBOT1 CLOTH1 NODE2-3 NODE1-3 NODE3-3 NODE2-4
+       58: MOVE ROBOT1 NODE1-3 NODE1-4
+       59: MOVE ROBOT1 NODE1-4 NODE1-5
+       60: MOVE ROBOT1 NODE1-5 NODE2-5
+       61: MOVE ROBOT1 NODE2-5 NODE3-5
+       62: MOVE ROBOT1 NODE3-5 NODE4-5
+       63: MOVE ROBOT1 NODE4-5 NODE4-6
+       64: MOVE ROBOT1 NODE4-6 NODE4-7
+       65: MOVE ROBOT1 NODE4-7 NODE3-7
+       66: MOVE ROBOT1 NODE3-7 NODE2-7
+       67: MOVE ROBOT1 NODE2-7 NODE2-8
+       68: PUT ROBOT1 CLOTH1 NODE2-9 NODE2-8
+       69: RUN-WASHINGMACHINE ROBOT1 NODE2-9 NODE2-8 CLOTH1
+       70: TAKE-CLOTH-FROM-WASCHINGMACHINE ROBOT1 CLOTH1 NODE2-9 NODE2-8
+       71: MOVE ROBOT1 NODE2-8 NODE2-7
+       72: MOVE ROBOT1 NODE2-7 NODE3-7
+       73: MOVE ROBOT1 NODE3-7 NODE4-7
+       74: MOVE ROBOT1 NODE4-7 NODE4-6
+       75: MOVE ROBOT1 NODE4-6 NODE4-5
+       76: MOVE ROBOT1 NODE4-5 NODE3-5
+       77: MOVE ROBOT1 NODE3-5 NODE2-5
+       78: MOVE ROBOT1 NODE2-5 NODE1-5
+       79: MOVE ROBOT1 NODE1-5 NODE1-4
+       80: MOVE ROBOT1 NODE1-4 NODE1-3
+       81: PUT ROBOT1 CLOTH1 NODE2-3 NODE1-3
+
+
+time spent:    0.77 seconds instantiating 6921932 easy, 0 hard action templates
+               1.91 seconds reachability analysis, yielding 795 facts and 1216 actions
+               0.00 seconds creating final representation with 502 relevant facts, 0 relevant fluents
+               0.00 seconds computing LNF
+               0.01 seconds building connectivity graph
+               0.06 seconds searching, evaluating 744 states, to a max depth of 20
+               2.75 seconds total time
