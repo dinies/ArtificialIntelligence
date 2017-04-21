@@ -1,0 +1,79 @@
+Exercises 1.3
+
+Exercise 1.1 Which of the following sequences of characters are atoms, which are variables, and which are neither?
+1. vINCENT                                        atom
+2. Footmassage                                    var
+3. variable23                                     atom
+4. Variable2000                                   var
+5. big_kahuna_burger                              atom
+6. ’big kahuna burger’                            atom
+7. big kahuna burger                              neither
+8. ’Jules’                                        atom
+9. _Jules                                         var
+10. ’_Jules’                                      atom
+
+Exercise 1.2 Which of the following sequences of characters are atoms, which are variables, which are complex terms,
+ and which are not terms at all? Give the functor and arity of each complex term.
+1. loves(Vincent,mia)                             compl  loves/2 var Vincent atom mia
+2. ’loves(Vincent,mia)’                           atom
+3. Butch(boxer)                                   var   Err: neither
+4. boxer(Butch)                                   compl  boxer/1 var Butch
+5. and(big(burger),kahuna(burger))                compl  and/2 big/1 kahuna/1 atom burger
+6. and(big(X),kahuna(X))                          compl  and/2 big/1 kahuna/1 var X
+7. _and(big(X),kahuna(X))                         var   Err: neither
+8. (Butch kills Vincent)                          neither
+9. kills(Butch Vincent)                           neither
+10. kills(Butch,Vincent                           neither
+
+Exercise 1.3 How many facts, rules, clauses, and predicates are there in the follow- ing knowledge base?
+ What are the heads of the rules, and what are the goals they contain?
+woman(vincent).
+woman(mia).
+man(jules).
+person(X) :- man(X); woman(X).
+loves(X,Y) :- knows(Y,X).
+father(Y,Z) :- man(Y), son(Z,Y).
+father(Y,Z) :- man(Y), daughter(Z,Y).
+      3 facts, 5 rules, 4 clauses, 8 predicates;  Err: 4 rules, 7 clauses
+      Head:  person(X) Goal: man(X) or woman(X)
+      Head:  loves(X,Y) Goal: knows(Y,X)
+      Head:  father(Y,X) Goal: man(Y) and son(Z,Y) or daughter(Z,Y)
+
+Exercise 1.4 Represent the following in Prolog:
+1. Butch is a killer.
+    killer(butch).
+2. Mia and Marcellus are married.
+    married(mia, marcellus).
+3. Zed is dead.
+    dead(zed).
+4. Marcellus kills everyone who gives Mia a footmassage.
+    kills(marcellus, X) :- footmassage(mia, X).
+5. Mia loves everyone who is a good dancer.
+    loves(mia, X) :- good_dancer(X).
+6. Jules eats anything that is nutritious or tasty.
+    doesnt_eat(jules, X) :- nutritious(X).    Err: eats instead of doesnt_eat
+    doesnt_eat(jules,X) :- tasty(X).          Text comprehension error.
+
+
+Exercise 1.5 Suppose we are working with the following knowledge base:
+wizard(ron).
+hasWand(harry).
+quidditchPlayer(harry).
+wizard(X) :- hasBroom(X),hasWand(X).
+hasBroom(X) :- quidditchPlayer(X).
+
+How does Prolog respond to the following queries?
+1. wizard(ron).
+  Yes
+2. witch(ron).
+  False.        Err:   Undefined procedure witch/1
+3. wizard(hermione).
+  False.        Err:   No
+4. witch(hermione).
+  False.        Err:   Undefined procedure witch/1
+5. wizard(harry).
+  Yes
+6. wizard(Y).
+  ron ; harry   Err:  Y = ron ; Y = harry
+7. witch(Y).
+  False.        Err:   Undefined procedure witch/1

@@ -1,0 +1,124 @@
+
+
+Exercise 2.1 Which of the following pairs of terms match? Where relevant,
+ give the variable instantiations that lead to successful matching.
+1. bread = bread 		y
+2. ’Bread’ = bread 		n
+3. ’bread’ = bread 		y
+4. Bread = bread 		y -> Bread/bread
+5. bread = sausage 		n
+6. food(bread) = bread 	n
+7. food(bread) = X		y -> X/food(bread)
+8. food(X) = food(bread) 								y -> X/bread
+9. food(bread,X) = food(Y,sausage)						y -> X/sausage ,  Y/bread
+10. food(bread,X,beer) = food(Y,sausage,X)	  :--:	{ Y/bread, X/sausage, X/beer !!! no}   n	
+11. food(bread,X,beer) = food(Y,kahuna_burger)   n : functions with different arity
+12. food(X) = X   {	occur check --> n recursively X/food(food(food(food(food(...))))) } instead it return X=food(X). 		
+13. meal(food(bread),drink(beer)) = meal(X,Y)  	y ->  X/food(bread) , X/drink(beer) 
+14. meal(food(bread),X) = meal(X,drink(beer))	:--: { X/food(bread) , X/drink(beer) !!! no }  n
+
+
+
+Exercise 2.2 We are working with the following knowledge base:
+
+house_elf(dobby). 
+witch(hermione). 
+witch(’McGonagall’). 
+witch(rita_skeeter). 
+magic(X):- house_elf(X).
+magic(X):- wizard(X). 
+magic(X):-witch(X).
+Which of the following queries are satisfied? Where relevant,
+ give all the variable instantiations that lead to success.
+1. ?- magic(house_elf).  	no
+2. ?- wizard(harry).		no
+3. ?- magic(wizard).		no
+4. ?- magic(’McGonagall’). 	yes
+
+5. ?- magic(Hermione).	
+Draw the search tree for the fifth query magic(Hermione).
+
+1:		magic(Hermione)
+2:		house_elf(Hermione)  yes -> Hermione/dobby ;
+2.1:	wizard(Hermione) -> backtrack
+2.2:	witch(Hermione) 	yes -> Hermione/hermione ;
+2.3:	witch(Hermione)		yes -> Hermione/’McGonagall’ ;
+2.4:	witch(Hermione)		yes -> Hermione/rita_skeeter 
+
+Exercise 2.3 Here is a tiny lexicon and mini grammar with only
+ one rule which defines a sentence as consisting of five words:
+  an article, a noun, a verb, and again an article and a noun.
+word(article,a). 
+word(article,every). 
+word(noun,criminal). 
+word(noun,’big kahuna burger’). 
+word(verb,eats). 
+word(verb,likes).
+sentence(Word1,Word2,Word3,Word4,Word5) :- 
+ word(article,Word1),
+ word(noun,Word2), 
+ word(verb,Word3),
+ word(article,Word4), 
+ word(noun,Word5).
+What query do you have to pose in order to find out which sentences
+ the grammar can generate? List all sentences that this grammar can
+  generate in the order Prolog will generate them. 
+  Make sure that you understand why Prolog generates them in this order.
+
+?- sentence(X,Y,Z,W,U).
+2 up to the 5 = in total 32 possibillities
+	1: a criminal eats a criminal
+	2: a criminal eats a big kahuna burger
+	3: a criminal eats every criminal
+	4: a criminal eats every big kahuna burger
+	5: a criminal likes a criminal
+	6: a criminal likes a big kahuna burger
+	7: a criminal likes every criminal
+	8: a criminal likes every big kahuna burger
+
+	9:  a big kahuna burger eats a criminal
+	10: a big kahuna burger eats a big kahuna burger
+	11: a big kahuna burger eats every criminal
+	12: a big kahuna burger eats every big kahuna burger
+	13: a big kahuna burger likes a criminal
+	14: a big kahuna burger likes a big kahuna burger
+	15: a big kahuna burger likes every criminal
+	16: a big kahuna burger likes every big kahuna burger
+
+	with other 16 possibilities changing only in a/every as the first word
+
+Exercise 2.4 Here are six English words:
+abalone, abandon, anagram, connect, elegant, enhance.
+They are to be arranged in a crossword puzzle
+ like fashion in the grid given below.
+
+The following knowledge base represents a lexicon containing
+ these words.
+word(abalone,a,b,a,l,o,n,e).
+ word(abandon,a,b,a,n,d,o,n).
+  word(enhance,e,n,h,a,n,c,e).
+   word(anagram,a,n,a,g,r,a,m).
+    word(connect,c,o,n,n,e,c,t).
+     word(elegant,e,l,e,g,a,n,t).
+
+Write a predicate crosswd/6 that tells us how to fill the grid,
+ i.e. the first three arguments should be the vertical words 
+ from left to right and the following three arguments the horizontal
+  words from top to bottom.
+
+
+crossword(V1, V2, V3, H1, H2, H3) :-
+word(V1, _, V12, _, V14, _, V16, _),
+word(V2, _, V22, _, V24, _, V26, _),
+word(V3, _, V32, _, V34, _, V36, _),
+word(H1, _, H12, _, H14, _, H16, _),
+word(H2, _, H22, _, H24, _, H26, _),
+word(H3, _, H32, _, H34, _, H36, _),
+V12 = H12, V22 = H14, V32 = H16,
+V14 = H22, V24 = H24, V34 = H26,
+V16 = H32, V26 = H34, V36 = H36,
+V1\=H1,V2\=H1,V3\=H1,
+V1\=H2,V2\=H2,V3\=H2,
+V1\=H3,V2\=H3,V3\=H3.
+
+
