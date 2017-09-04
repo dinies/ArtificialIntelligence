@@ -59,13 +59,20 @@
 			addWeedCells(weed);
 			initTasks();
 			initAgentsRandom(ags);
+			executionDCOPlogic();
 
+		}
+
+		/** it implements the whole logic of an execution of a DCOP algorithm
+		*/
+		public void executionDCOPlogic(){
 
 			//DCOP LOGIC HAVE TO BE IMLEMENTED HERE
 			// choose 4 random cells with weed to be assigned and store them in wolrd.class as a list
-			world.chooseCellSubset(ags);
+			int n_agents= agents.size();
+			world.chooseCellSubset(n_agents);
 			// instantiate Depthtree.class --> 4 nodes created [0,1,2,3] and build DFS tree
-			depthTree= new DepthTree( this.world, ags );
+			depthTree= new DepthTree( this.world, n_agents );
 			//DCOP execution (at the end all the tasks that belong to the subset will be assigned)
 
 			HashMap<Integer, LinkedList<Integer>> struct = this.computePathValues();
@@ -162,6 +169,7 @@
 
 			//executing the action for the agent and return the new task that has to be executed
 			//e.g. move to a task already executed and return the new task computed according to the wanted action
+
 			Task previous_task= agent.getCurrentTask();
 			Task nextTask = world.executeAction(agent.getId(),agent.getCurrentTask(),act);
 
@@ -196,10 +204,17 @@
 
 	        currentAgent=(currentAgent+1)%agents.size();
 
-	        if(inactiveSteps>=2*agents.size()) // || this.world.getUncompletedTask().isEmpty())
+	        if(inactiveSteps>=2*agents.size()  || this.world.getUncompletedTask().isEmpty())
 	            return true;
-	        else
+	        else{
+	        	  if (this.world.checkSprayedInSubSet()){
+	        		System.out.println("DCOP EXEC");
+	        		executionDCOPlogic();
+	        	}
+	        }
 	            return false;
+
+
 		}
 
 

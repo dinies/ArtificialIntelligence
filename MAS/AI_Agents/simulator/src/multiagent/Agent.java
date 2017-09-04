@@ -259,7 +259,7 @@ public class Agent implements Serializable{
 	}
 
 	public LinkedList<Integer> getTaskValues(){
-		if ( this.taskValues ==null || this.getTaskValues().isEmpty()){
+		if ( this.taskValues ==null || this.taskValues.isEmpty()){
 			this.computeTaskValues();
 		}
 		return this.taskValues;

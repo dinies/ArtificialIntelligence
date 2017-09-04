@@ -154,6 +154,20 @@ public class World{
 		return this.weedCellSubset;
 	}
 
+	/** it checks if the cellsubset contains all sprayed cells
+	*/
+	public boolean checkSprayedInSubSet(){
+		boolean all_done = true;
+
+		Iterator<Cell> iter= this.weedCellSubset.iterator();
+		while(iter.hasNext()){
+			if (iter.next().isWeed()){
+				all_done= false;
+			}
+		}
+		return all_done;
+	}
+
 
 	/** compute manhattan distance between two cells */
 	public int manhattanDistance( Cell c1, Cell c2){
@@ -370,8 +384,10 @@ public class World{
 
 		for(int i = 0; i < this.height; i++){
 			for (int j = 0; j < this.width; j++){
-				if(!this.map[i][j].getTask().isDone()){
-					uncTasks.add(this.map[i][j].getTask());
+				if (this.map[i][j].getTask() != null){
+					if(!this.map[i][j].getTask().isDone()){
+						uncTasks.add(this.map[i][j].getTask());
+					}
 				}
 			}
 		}
