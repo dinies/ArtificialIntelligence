@@ -10,7 +10,7 @@ import javax.swing.*;
  * <p> When pressing any button on the keyboard, the simulation stops or restarts.
  * @version 1.1
  * @author Albani Dario
- * 
+ *
  * @version 1.0 - May 22, 2013
  * @author Federico Patota
  * @author Gabriele Buondonno
@@ -40,7 +40,7 @@ public class WorldPanel extends JPanel implements ActionListener, KeyListener{
 		//AgentSim sim=new AgentSim("world.mas",agents,initialTasks);
 
 		//creating WorldPanel
-		WorldPanel panel=new WorldPanel(sim,20);
+		WorldPanel panel=new WorldPanel(sim,1000);
 
 		//creating and setting frame
 		JFrame frame=new JFrame("World");

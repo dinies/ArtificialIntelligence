@@ -5,21 +5,21 @@ import java.io.*;
 
 /**
  * This class implements a UAV.
- * 
+ *
  * ===================      README      ======================
- * 
+ *
  * NOT ALL THE ACTION IN THE CURRENT CLASS HAVE TO BE DEFINED.
- * Think carefully to what you choose to do and complete 
+ * Think carefully to what you choose to do and complete
  * the action needed by your implementation.
  * IF YOU THINK that your implementation needs more methods
- * than those here proposed, you can implement them. 
- * Be careful to follow the guidelines and be ready to 
- * motivate your changes. 
+ * than those here proposed, you can implement them.
+ * Be careful to follow the guidelines and be ready to
+ * motivate your changes.
  * ===========================================================
- * 
+ *
  * @version 1.1
  * @author Albani Dario
- * 
+ *
  * @version 1.0 - May 22, 2013
  * @author Federico Patota
  * @author Gabriele Buondonno
@@ -35,7 +35,7 @@ public class Agent implements Serializable{
 
 	/**task currently under execution by this agent.*/
 	private Task currentTask;
-	
+
 	/**action currently under execution by this agent.*/
 	private Action currentAction;
 
@@ -44,18 +44,21 @@ public class Agent implements Serializable{
 
 	/**instance of the current world class on which the agent is acting**/
 	private World world;
-	
+
+
+	/**list of all the values needed for DCOP algo */
+	private LinkedList<Integer> taskValues;
 	/**
 	 * Constructor for this class.
 	 * @param id identifier for this agent.
-	 * @param c initial agent position. 
+	 * @param c initial agent position.
 	 * @param world an instance of the world used to retrieve information and tasks
 	 */
 	public Agent(int id, Cell c, World world){
 		this.id=id;
 		this.world = world;
 		position=c;
-		currentAction = Action.publishNextTask;
+		currentAction = Action.publishNextTask;   //ACTIONS WILL BE DECIDED AFTER THAT THE TASK LIST HAS BEEN ASSIGNED, THIS HAS TO BE CONSIDERED AS A DDUMMY ACTION
 	}
 
 	/**
@@ -91,7 +94,7 @@ public class Agent implements Serializable{
 	}
 
 	/**
-	 * Adds this cell to the pending tasks list only if has weeds and is not harvested 
+	 * Adds this cell to the pending tasks list only if has weeds and is not harvested
 	 */
 	public void addpTask(Task t){
 		if (t.getCell().isWeed() && !t.getCell().isSprayed())
@@ -132,63 +135,86 @@ public class Agent implements Serializable{
 		this.currentTask = null;
 	}
 
-	/** 
-	 * 
+	/**
+	 *
 	 * The simulator asks the agent to allocate the pending tasks.
 	 * The pending tasks are either the list of pending tasks available in the current class
 	 * or the task still available in the world (this depend to your implementation).
 	 * The tasks are immediately assigned according to the specification of your exercise.
 	 * The agent list is provided by the simulator.
      *
-	 * @param agents the agents list.
+	 * @param assignment_map   map in which keys are NODE indexes
+	 * ( wtr to agent index : AGENT_INDEX = NODE_INDEX +1) and values
+	 * are task indexes wtr of the array that contains the subset of tasks
+	 * involved in the completed DCOP execution
 	 */
-	public void assignTasks(List<Agent> agents){
-		System.out.print("TODO: you should find a way to assign a new task\n");
-		// TODO Complete
-	}
-	
-	/** 
-	 * CNP - implement your own logic (e.g. for CNP the agent is the manager of task)
-	 * 
-	 * The simulator asks the agent to allocate the pending tasks.
-	 * The pending tasks are either the list of pending tasks available in the current class
-	 * or the task still available in the world (this depend to your implementation).
-	 * The tasks are immediately assigned according to the specification of your exercise.
-	 * The agent list is provided by the simulator.
-	 *
-	 * @param agents the agents list.
-	 */
-	public void assignTasks(List<Agent>agents, Task task){
-		System.out.print("TODO: you should find a way to assign a new task\n");
-		for(Agent a : agents){
-			a.bidForTask(task);
-			//continue
-		}	
+	public void assignTasks(HashMap<Integer, Integer> assignment_map){
+		ArrayList<Cell> task_cells= world.getWeedCellSubset();
+		int node_index= this.id -1;
+		int task_index= assignment_map.get(node_index);
+		Cell task_cell= task_cells.get(task_index);
+		Task task= task_cell.getTask();
+		this.addpTask(task);
 	}
 
+	// /**
+	//  * CNP - implement your own logic (e.g. for CNP the agent is the manager of task)
+	//  *
+	//  * The simulator asks the agent to allocate the pending tasks.
+	//  * The pending tasks are either the list of pending tasks available in the current class
+	//  * or the task still available in the world (this depend to your implementation).
+	//  * The tasks are immediately assigned according to the specification of your exercise.
+	//  * The agent list is provided by the simulator.
+	//  *
+	//  * @param agents the agents list.
+	//  */
+	// public void assignTasks(List<Agent>agents, Task task){
+	// 	System.out.print("TODO: you should find a way to assign a new task\n");
+	// 	for(Agent a : agents){
+	// 		a.bidForTask(task);
+	// 		//continue
+	// 	}
+	// }
+
 	/**
-	 * 
+	 *
 	 * This method is called by the simulation environment to inform
 	 * the agent about the outcome of its action, as provided by the World.
 	 * @param nextPosition the agent new position.
 	 * @param nextTask a new task discovered by this agent. If null, there is no next task.
 	 */
 	public void updateState(Cell nextPosition, Task nextTask){
+
 		this.position = nextPosition;
 		this.currentTask = nextTask;
-		
-		//Some tips:
-		// If the agent is in the same cell as nextPosition maybe it needs to 
-		// either move or check/spray
-		// Do not forget the noOp operation that is used to terminate the simulation (is one of the condition in or)
-		System.out.print("TODO: maybe something like this.currentAction = ??? \n");
-		System.out.print("TODO: I should do something\n");
-		
+
+		if ( nextTask!=null){
+			if (nextTask.getStatus()!= Task.Status.DONE){
+
+				if ( nextTask.getCell() != nextPosition){
+					this.currentAction= Action.moveToLocation;
+				}else{
+					this.currentAction= Action.spray;
+				}
+
+			//Some tips:
+			// If the agent is in the same cell as nextPosition maybe it needs to
+			// either move or check/spray
+			// Do not forget the noOp operation that is used to terminate the simulation (is one of the condition in or)
+			//System.out.print("TODO: maybe something like this.currentAction = ??? \n");
+			//System.out.print("TODO: I should do something\n");
+			}else{
+				this.currentAction= Action.publishNextTask;
+				
+			}
+		}else{
+			this.currentAction= Action.noOp;
+		}
 	}
 
 
-	/** 
-	 * 
+	/**
+	 *
 	 * The requests for Bids are issued by the agent.
 	 * In the first implementation an agent can only bid if it has no current task.
 	 * @param task the task which the request is issued for.
@@ -201,7 +227,7 @@ public class Agent implements Serializable{
 	}
 
 	/**
-	 *  
+	 *
 	 * The acceptance requests are issued by the agent.
 	 * In the first implementation an agent can only accept if it has no current task.
 	 * @param task the task which the request is issued for.
@@ -211,5 +237,37 @@ public class Agent implements Serializable{
 		System.out.print("TODO: how am I supposed to accept the task?\n");
 		// TODO Complete
 		return false;
+	}
+
+
+
+	/** compute the value for each task
+	 * value is based on the following operation:
+	 * value=  (MAX_PATH_LENGTH + 1) - MANHATTAN_DISTANCE
+	 */
+	public void computeTaskValues(){
+
+		int max_path_length= world.getHeight() + world.getWidth();
+		LinkedList<Integer> l = new LinkedList<>();
+		Iterator<Cell> iter= world.getWeedCellSubset().iterator();
+		while( iter.hasNext()){
+			int dist = world.manhattanDistance(this.position, iter.next());
+			int value= (max_path_length +1) - dist;
+			l.add(value);
+		}
+		this.taskValues= l;
+	}
+
+	public LinkedList<Integer> getTaskValues(){
+		if ( this.taskValues ==null || this.getTaskValues().isEmpty()){
+			this.computeTaskValues();
+		}
+		return this.taskValues;
+	}
+
+
+	public void setPosition( Cell pos){
+		this.position=pos;
+		this.world.updateAgentPosition(this.id, pos);
 	}
 }

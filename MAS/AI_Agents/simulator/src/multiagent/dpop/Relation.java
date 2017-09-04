@@ -1,7 +1,12 @@
 package multiagent.dpop;
 
+import java.awt.List;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
+
+//import com.sun.org.apache.xml.internal.utils.res.IntArrayWrapper;
 
 /**
  * Class used to simulate a relation table as for the DPOP problem.
@@ -85,19 +90,122 @@ class Relation {
 		}
 	}
 
+
+	/** update the value table in case that the node is the PARENT in the relation
+	 * so all the COLUMNS one by one will be summed with the elems of the vector passed as param
+	 * NOTE: the elements on the diagonal won't be considered 
+	 * since they represent hard constraints between nodes
+	 * example: vec= [3,2,1]
+	 * | +0  +2   +1|
+	 * | +3  +0	  +1|
+	 * | +3	 +2   +0|
+	 * @param vec list of all the values for every task variable 
+	 */
+	public void updateParentValues( LinkedList<Integer> vec){
+		//each elem of vec will be added to the entire current column : 1st ele --> added to all the first row ( NO on the diagonal position)
+		Iterator<Integer> iter= vec.iterator();
+		int current_column= 0;
+		while (iter.hasNext()){
+
+			int vec_value= iter.next();
+				
+			for (int i=0 ; i < vec.size(); i++ ){
+				if (i != current_column){
+					int old_value= this.utilValues.get(i).get(current_column);
+					
+					this.utilValues.get(i).add(current_column, vec_value + old_value);
+					this.utilValues.get(i).remove(current_column+1);
+				}
+			}
+			current_column ++;
+		}
+		this.updateUtilMessage();
+		
+	}
+
+
+	/** update the value table in case that the node is the CHILD in the relation
+	 * so all the ROWS  one by one will be summed with the eelems of the  vector passed as param
+	 * NOTE: the elements on the diagonal won't be considered 
+	 * example: vec= [3,2,1]
+	 * | +0  +3   +3|
+	 * | +2  +0	  +2|
+	 * | +1	 +1   +0|
+	 * since they represent hard constraints between nodes
+	 * @param vec list of all the values for every task variable 
+	 */
+	public void updateChildValues(LinkedList<Integer> vec){
+		//each elem of vec will be added to the entire current row : 1st ele --> added to all the first row ( NO on the diagonal position)
+		Iterator<Integer> iter= vec.iterator();
+		int current_row= 0;
+		while (iter.hasNext()){
+		
+			int vec_value= iter.next();
+						
+			for (int i=0 ; i < vec.size(); i++ ){
+				if (i != current_row){
+							int old_value= this.utilValues.get(current_row).get(i);
+							
+							this.utilValues.get(current_row).add(i, vec_value + old_value);
+							this.utilValues.get(current_row).remove(i+1);
+				}
+			}
+			current_row ++;
+		}
+		this.updateUtilMessage();
+				
+	}
+
+
 	public LinkedList<Integer> getUtilMessage(){
 		return this.utilMessage;
+	}
+
+	public void setUtilMessage( LinkedList<Integer> list){
+		this.utilMessage= list;
+
 	}
 
 	/**
 	 * Implements the join between two different utility messages.
 	 * this and util must be of the same length.
-	 * 
+	 * @param msg
 	 * @return a single utility message that is the element wise sum of the two in input
 	 */
-	public LinkedList<Integer> joinUtilMessages(LinkedList<Integer> util){
-		//TODO
-		return null;
+	public LinkedList<Integer> jointSumUtilMessages(LinkedList<Integer> msg){
+		LinkedList<Integer> elementWise_sum = new LinkedList<>();
+		LinkedList<Integer> value_msg= this.getUtilMessage();
+		for (int i =0 ; i < value_msg.size() ; i++){
+			Integer sum= msg.get(i) + value_msg.get(i);
+			elementWise_sum.add(i, sum);
+		}
+		return elementWise_sum;
+	}
+
+
+	/** it will compute the joint max value considering all the combinations of variables 
+	 * it will use the value, in each column of the value table,
+	 * which will give the maximum number after that is being added to
+	 *  the corresponding value  ( according to the index in the column ) 
+	 * in the utility message vector given as param
+	 * fianlly it will overwrite the utility message
+	 * @param childrenJointValue List of values for each variable
+	 */
+	public void jointMaxSumUtilMessages(  LinkedList<Integer> childrenJointValue){
+		LinkedList<Integer> new_utility_message= new LinkedList<>();
+		int j=0;
+		for(LinkedList<Integer> column : this.utilValues){
+
+			ArrayList<Integer> sum = new ArrayList<>();
+			for (int i=0; i< column.size(); i++){
+				sum.add(i, (column.get(i) + childrenJointValue.get(i)));
+			}
+
+			new_utility_message.add(j, Collections.max(sum));
+			j++;
+
+		}
+		this.setUtilMessage( new_utility_message);
 	}
 
 	/**
