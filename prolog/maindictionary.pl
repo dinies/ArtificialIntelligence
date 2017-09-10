@@ -11,7 +11,7 @@ plus1(s(X),Y,s(Z)):- plus1(X,Y,Z).
 lesseq1(0,X) :- natural_number(X).
 lesseq1(s(X),s(Y)) :- lesseq1(X,Y).
  
-% timesOP multiplies first param of x number of times where x is second param and puts the result in the third param
+% timesOP multiplies first param for x number of times where x is second param and puts the result in the third param
 timesOP(_,0,0).
 timesOP(0,_,0).
 timesOP(X,s(Y),Z) :- timesOP(X,Y,W),plus1(X, W, Z).   
@@ -19,7 +19,7 @@ timesOP(X,s(Y),Z) :- timesOP(X,Y,W),plus1(X, W, Z).
 %   powerOP
 powerOP(0,_,0).
 powerOP(_,0,s(0)).
-powerOP(X,s(Y),Z) :- powerOP(X,Y,W), timesOP(W,X,Z).
+powerOP(X,s(Y),Z) :- powerOP(X,Y,W), timesOP(X,W,Z).
 
 % factorialOP computes the factorial of the first argument and return the result in the secon argument
 factorialOP(0,s(0)).
@@ -49,9 +49,6 @@ containedOP(X,[Y|List]) :- X\= Y, containedOP(X,List).
 notContainedOP(_, []).
 notContainedOP(X, [H|T]):- X\=H, notContainedOP(X,T).
 
-%%subsetOP/2 checks that the first param is contained in (is a subset of) the second param, ERROR infinite loop in the first element with this call? trace, subsetOP(O,[r,g,b,f]).
-subsetOP([],_).
-subsetOP([X|Rest], Set) :-  containedOP(X,Set), removeallOP(X,Set,K), subsetOP(Rest,K).
 
 %%removeheadOP/2 remove the head of a list passed as first param; result is the second param
 removeheadOP([_|Rest], Rest).
@@ -84,14 +81,41 @@ putoutOP([H|T],Y,R):- notContainedOP(H,Y), putoutOP(T,Y,Partial), appendOP(H,Par
 reverseOP([],[]).
 reverseOP([H|T],Z):- reverseOP(T,K), addToTheBackOP(H,K,Z).
 
-%%suffixOP if you ask him something with an indefinite variable it will loop undefinitely probably because reverseOP is not robust enought.
-suffixOP(L,J):- reverseOP(L,X), reverseOP(J,Y),suffixRecOP(X,Y).
-suffixRecOP([],_).
-suffixRecOP([H|Tx],[H|Ty]):- suffixRecOP(Tx,Ty).
+%%prefixOP/2 returns each atom @1 which is a valid prefix of the List @2
+prefixOP([], _).
+prefixOP( [H | Rest1], [H | Rest2]) :- prefixOP( Rest1, Rest2).
+
+%%suffixOP/2 returns each atom @1 which is a suffix for the List @2 (inverse logic of prefixOP/2)
+suffixOP( Suf, L):- reverseOP( L , R ), prefixOP( K, R) ,reverseOP( K, Suf).
+
+
+
+%%sublistOP/2 returns each subset @1 made of contiguous elems that belong to the List @2 ( e.g. @2 [1,2,3]   @1 [];[1];[2];[3];[1,2];[2,3];[1,2,3] )
+sublistOP([] , _).
+sublistOP( X , List ):- prefixOP( X,  List).	
+sublistOP( X , [_|Tail]):- sublistOP( X, Tail).
+
+
+%unionOP/3 it will return the union of two sets @1 , @2  N.B. duplicates are mantained
+unionOP( [], S , S).
+unionOP( [H|Tail] , Set2 , Result) :-  containedOP( H, Set2), unionOP( Tail, Set2, Result).
+unionOP( [H|Tail] , Set2 , Result) :-   unionOP( Tail, Set2, K ), concatOP( [H], K, Result).
+
+
+
+%%subsetOP/2 checks that the first param @1 is contained in (is a subset of) the second param @2, ERROR infinite loop in the first element with this call? trace, subsetOP(O,[r,g,b,f]).
+%% it works if @1 is not undefined (e.g. is a set [1,2] or [8,4,3]) but with an undefined input it will return wrong results (same results as a prefixOP execution) 
+subsetOP([], _).
+subsetOP( [X | Tail] , Set):-  containedOP( X , Set), removeOP(X, Set, New), subsetOP( Tail, New).
+
+
 
 
 
 %>>checked until there.
+
+
+
 
 %insertionSortOP  it return an ordered list computing an insertion sort policy
 %[1,3,2] -> []
@@ -100,7 +124,7 @@ suffixRecOP([H|Tx],[H|Ty]):- suffixRecOP(Tx,Ty).
 %[] -> [1,2,3]
 
 
-insertionSortOP  
+%insertionSortOP  
 
 % GRAPHS AND TREES OPERATIONS {VISIT, PATH, EXISTENCE}
 arc(a,b).
@@ -126,5 +150,9 @@ dfsExpandedSuccOP([H|T], Rev,Expanded):- dfsExpandedRecOP(H,Rev,Expanded), dfsEx
 
 dfsExpandedRecOP(X,_,_):- childrenOP(X,[]).
 dfsExpandedRecOP(X, Visited,Result):- appendOP(X,Visited,Revisited), appendOP(X,Expanded,Result), childrenOP(X,Successors), putoutOP(Successors,Visited,Ksucc), dfsExpandedSuccOP(Ksucc,Revisited,Expanded).
+
+
+
+
 
 

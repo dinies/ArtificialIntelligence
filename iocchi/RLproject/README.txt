@@ -1,0 +1,1 @@
+Python modelling of a chess endgame situation played on a reduced board.
