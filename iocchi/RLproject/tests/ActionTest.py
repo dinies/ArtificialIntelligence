@@ -13,15 +13,8 @@ class ActionTest(unittest.TestCase):
 		target_square2 = Square.Square("a", 1)
 		self.action1= Action.Action(piece,target_square1)
 		self.action2= Action.Action(piece,target_square2)
-
 		self.action3= Action.Action(piece,target_square2, capture = True)
-
 		self.action4= Action.Action(piece,target_square2, check = True)
-
-		self.action5= Action.Action(piece,target_square2, check =True,  checkmate = True)
-
-
-
 
 	def test_eq__(self):
 		self.assertFalse(self.action1.__eq__(self.action2))
@@ -32,13 +25,13 @@ class ActionTest(unittest.TestCase):
 
 		self.assertEqual( self.action3.__str__() , "K.a2xa1")
 		self.assertEqual( self.action4.__str__() , "K.a2-a1+")
-		self.assertEqual( self.action5.__str__() , "K.a2-a1#")
 
 
 	def tearDown(self):
 		self.action1= None
 		self.action2= None
-
+		self.action3= None
+		self.action4= None
 
 if __name__ == '__main__':
     unittest.main()

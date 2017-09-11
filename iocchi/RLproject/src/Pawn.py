@@ -1,5 +1,7 @@
 from src import Piece
 import string
+from src import Action
+from src import Board
 
 class Pawn(Piece.Piece):
 	"""docstring for Pawn"""
@@ -7,22 +9,80 @@ class Pawn(Piece.Piece):
 		super().__init__(color)
 		
 
-	def reachable_squares(self):
-		return []
+	def get_reachable_squares(self,board):
+		reac_squares= []
+		column = self.square.column
+		row = self.square.row
+		if self.color == "white" :
+			row_index= row + 1
+			
+		else: 
+			row_index= row - 1
+
+		s_key= column + str(row_index)
+		if board.is_free_square(s_key):
+			reac_squares.append( board.squares[s_key] )
+		return reac_squares
 
 	def get_possible_actions(self,board):
-		#search for reachable squares   ___ if they are empty then this is valid action
+		action_list=[]
 
+		#search for reachable squares   ___ if they are empty (and indeed they are) then this is valid action
+		reachable_squares = self.get_reachable_squares(board)
 
-		#search for attacked squares  ____ if they are occupied by an enemy piece different from the king then they can capture
-		
-		#ask the board if the enemy king is put under check or chekmate
-		# create action accordingly and add to action_list to return
-		pass
-		
-	def attacked_squares(self, board):
+		#search for attacked squares  ____ if they are occupied by an enemy piece they can capture
+		attacked_squares = self.get_attacked_squares(board)
+		capture_squares= []
+		for  s in attacked_squares:
+			if self.color == "white" :
+				if  not board.is_free_square(s.__str__()) and  s in board.black.occupied_squares:
+					capture_squares.append(s)
+			else:
+				if not board.is_free_square(s.__str__()) and s in board.white.occupied_squares:
+					capture_squares.append(s)
+		for s in reachable_squares:
+
+			board_state= board.__str__()
+			next_board= Board.Board(board_state)
+			actual_square_key= self.square.__str__()
+			next_board.make_move(actual_square_key, s.__str__())
+			
+			if self.color == "white":
+				if next_board.is_under_check("black"):
+					action= Action.Action( self, s , check= True)
+				else:
+					action= Action.Action( self, s )
+			else:
+				if next_board.is_under_check("white"):
+					action= Action.Action( self, s , check= True)
+				else:
+					action= Action.Action( self, s )
+			action_list.append(action)
+		for s in capture_squares:
+
+			board_state= board.__str__()
+			next_board= Board.Board(board_state)
+			actual_square_key= self.square.__str__()
+			next_board.make_move(actual_square_key, s.__str__())
+			
+
+			if self.color == "white":
+				if next_board.is_under_check("black"):
+					action= Action.Action( self, s , capture= True, check= True)
+				else:
+					action= Action.Action( self, s , capture= True )
+			else:
+				if next_board.is_under_check("white"):
+					action= Action.Action( self, s , capture= True , check= True)
+				else:
+					action= Action.Action( self, s , capture= True)
+			action_list.append(action)
+
+		return action_list
+
+	def get_attacked_squares(self, board):
 		att_squares= []
-		column_keys=  string.ascii_lowercase[:board.rows_number]
+		column_keys=  string.ascii_lowercase[:board.columns_number]
 		column = self.square.column
 		row = self.square.row
 		col_index= column_keys.index(column)

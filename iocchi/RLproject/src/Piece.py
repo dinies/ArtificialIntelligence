@@ -11,12 +11,17 @@ class Piece(ABC):
 	def add_square(self, square):
 		self.square = square
 	
-	def remove_from_board(self):
+	def remove_from_board(self,board):
+		if self.color== "white":
+			board.white.remove_captured_piece(self)
+		else:
+			board.black.remove_captured_piece(self)
+			
 		self.square.remove_piece()
 		self.square= None
 
 	@abstractmethod
-	def reachable_squares(self):
+	def get_reachable_squares(self):
 		pass
 
 	@abstractmethod
@@ -24,7 +29,7 @@ class Piece(ABC):
 		pass
 
 	@abstractmethod
-	def attacked_squares(self,board):
+	def get_attacked_squares(self,board):
 		pass
 
 

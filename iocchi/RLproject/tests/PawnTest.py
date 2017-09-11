@@ -15,8 +15,9 @@ class PawnTest(unittest.TestCase):
         self.capture_check_board = Board.Board("111/111/1k1/1p1/P11/1K1")
         self.capture_check_white_pawn = self.capture_check_board.white.pieces[0]
         self.capture_check_black_pawn = self.capture_check_board.black.pieces[1]
+        self.check_board = Board.Board("111/111/1k1/111/p11/1K1")
+        self.check_black_pawn= self.check_board.black.pieces[1]
         self.checkmate_board= Board.Board("k11/11P/KP1/111/111/111")
-        self.checkmate_white_pawn = self.checkmate_board.white.pieces[2]
 
     def test_add_square(self):
         pawn = Pawn.Pawn("white")
@@ -24,16 +25,16 @@ class PawnTest(unittest.TestCase):
         pawn.add_square(square)
         self.assertEqual(pawn.square, square)
 
-    def test_initial_white_reachable_squares(self):
-        square_list= self.initial_white_pawn.reachable_squares()
+    def test_initial_white_get_reachable_squares(self):
+        square_list= self.initial_white_pawn.get_reachable_squares(self.initial_board)
         true_list= [ Square.Square("b", 3)]
         self.assertEqual(square_list, true_list)
 
-    def test_initial_black_reachable_squares(self):
-        square_list= self.initial_black_pawn.reachable_squares()
+    def test_initial_black_get_reachable_squares(self):
+        square_list= self.initial_black_pawn.get_reachable_squares(self.initial_board)
         true_list= [ Square.Square("a", 4)]
         self.assertEqual(square_list, true_list)
-
+    
     def test_initial_get_white_possible_actions(self):
         self.assertTrue(isinstance(self.initial_white_pawn, Pawn.Pawn))
         piece= Pawn.Pawn("white")
@@ -54,8 +55,6 @@ class PawnTest(unittest.TestCase):
         actions_list= self.initial_black_pawn.get_possible_actions(self.initial_board)
         self.assertEqual(actions_list, [action])
 
-
-
     def test_capture_check_get_white_possible_actions(self):
         self.assertTrue(isinstance(self.capture_check_white_pawn, Pawn.Pawn))
         piece= Pawn.Pawn("white")
@@ -67,7 +66,6 @@ class PawnTest(unittest.TestCase):
         action2= Action.Action(piece,target_square_2, check= True)
         actions_list= self.capture_check_white_pawn.get_possible_actions(self.capture_check_board)
         self.assertEqual(actions_list, [action2 , action1])
-
 
     def test_capture_check_get_black_possible_actions(self):
         self.assertTrue(isinstance(self.capture_check_black_pawn, Pawn.Pawn))
@@ -82,36 +80,40 @@ class PawnTest(unittest.TestCase):
         self.assertEqual(actions_list, [action2, action1])
 
 
-    def test_checkmate_get_white_possible_actions(self):
-        self.assertTrue(isinstance(self.checkmate_white_pawn, Pawn.Pawn))
-        piece= Pawn.Pawn("white")
-        s = Square.Square("b", 4)
-        piece.add_square(s)
-        target_square = Square.Square("b", 5)
-        action= Action.Action(piece,target_square, check= True, checkmate= True)
-        actions_list = self.checkmate_white_pawn.get_possible_actions(self.checkmate_board)
-        self.assertEqual(actions_list, [action])
-
-
-
-    def test_initial_white_attacked_squares_central(self):
+    def test_initial_white_get_attacked_squares_central(self):
         self.assertTrue(isinstance(self.initial_white_pawn, Pawn.Pawn))
-        square_list= self.initial_white_pawn.attacked_squares(self.initial_board)
+        square_list= self.initial_white_pawn.get_attacked_squares(self.initial_board)
         true_list= [ Square.Square("a", 3), Square.Square("c", 3)]
         self.assertEqual(square_list, true_list)
 
-    def test_initial_black_attacked_squares_on_edge(self):
+    def test_initial_black_get_attacked_squares_on_edge(self):
         self.assertTrue(isinstance(self.initial_black_pawn, Pawn.Pawn))
-        square_list= self.initial_black_pawn.attacked_squares(self.initial_board)
+        square_list= self.initial_black_pawn.get_attacked_squares(self.initial_board)
         true_list= [ Square.Square("b", 4)]
         self.assertEqual(square_list, true_list)
+
+    def test_check_black_get_attacked_squares(self):
+        self.assertTrue(isinstance(self.check_black_pawn, Pawn.Pawn))
+        square_list= self.check_black_pawn.get_attacked_squares(self.check_board)
+        true_list= [ Square.Square("b", 1)]
+        self.assertEqual(square_list, true_list)
+
+
+
 
     def test_str__(self):
         self.assertEqual(self.initial_white_pawn.__str__(), "P") 
 
     def tearDown(self):
         self.initial_board = None
-        self.white_pawn = None
+        self.initial_white_pawn= None
+        self.initial_black_pawn = None
+        self.capture_check_board = None
+        self.capture_check_white_pawn = None
+        self.capture_check_black_pawn = None
+        self.check_board = None
+        self.check_black_pawn= None
+        self.checkmate_board= None
 
 if __name__ == '__main__':
     unittest.main()

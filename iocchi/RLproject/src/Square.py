@@ -12,6 +12,9 @@ class Square(object):
 	def remove_piece( self):
 		self.piece= None
 
+	def is_occupied(self):
+		return  not self.piece == None
+
 
 
 	def __eq__(self, other):

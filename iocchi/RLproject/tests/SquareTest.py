@@ -1,6 +1,7 @@
 import unittest
 from context import src 
 from src import Square
+from src import Pawn
 
 
 class SquareTest(unittest.TestCase):
@@ -9,6 +10,12 @@ class SquareTest(unittest.TestCase):
 		self.square2= Square.Square("a",1)
 		self.square3= Square.Square("b",1)
 		self.square4= Square.Square("b",1)
+
+	def test_is_occupied(self):
+		piece= Pawn.Pawn("white")
+		self.square1.piece= piece
+		self.assertTrue( self.square1.is_occupied())
+		self.assertFalse( self.square2.is_occupied())
 
 	def test_eq__(self):
 		self.assertEqual( self.square1, self.square2)

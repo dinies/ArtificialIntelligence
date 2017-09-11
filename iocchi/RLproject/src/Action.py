@@ -4,12 +4,11 @@ import string
 
 class Action(object):
 	
-	def __init__(self, piece, target_square, capture = False, check = False, checkmate = False):
+	def __init__(self, piece, target_square, capture = False, check = False):
 		self.piece= piece
 		self.target_square= target_square
 		self.capture= capture
 		self.check= check
-		self.checkmate = checkmate
 
 
 
@@ -32,10 +31,7 @@ class Action(object):
 			sign_1= "-"
 
 		if self.check :
-			if self.checkmate :
-				sign_2 = "#"
-			else:
-				sign_2 = "+"
+			sign_2 = "+"
 		else:
 			sign_2 = ""
 
