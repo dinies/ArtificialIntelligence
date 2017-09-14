@@ -23,3 +23,7 @@ siblings(X, Y) :- parent(Z, X), parent(Z, Y), X\=Y.
 
     auntuncle(X,Y) :- parent(Z,Y),siblings(X,Z).
     
+%Define in PROLOG the relation onlychild(X), exploiting the family defined before.
+sameLevelInTreeOP( X ,Y ):- parent( Z, X) , parent( Z,Y), !.
+sameLevelInTreeOP( X ,Y ):- parent( W, X) , parent( Z,Y), W \= Z, sameLevelInTreeOP( W ,Z).
+onlychildOP(X):- sameLevelInTreeOP(X ,W), not(siblings(X, W)).

@@ -17,8 +17,7 @@ class PawnTest(unittest.TestCase):
         self.capture_check_black_pawn = self.capture_check_board.black.pieces[1]
         self.check_board = Board.Board("111/111/1k1/111/p11/1K1")
         self.check_black_pawn= self.check_board.black.pieces[1]
-        self.checkmate_board= Board.Board("k11/11P/KP1/111/111/111")
-
+       
     def test_add_square(self):
         pawn = Pawn.Pawn("white")
         square= Square.Square("b", 2)
@@ -113,7 +112,7 @@ class PawnTest(unittest.TestCase):
         self.capture_check_black_pawn = None
         self.check_board = None
         self.check_black_pawn= None
-        self.checkmate_board= None
+        
 
 if __name__ == '__main__':
     unittest.main()

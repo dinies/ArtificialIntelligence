@@ -27,8 +27,6 @@ class Agent(object):
 
 	def compute_possible_actions(self):
 		for piece in self.pieces :
-			# compute all the possible movements
-
 			possible_actions= piece.get_possible_actions(self.board)
 			for action in possible_actions:
 				self.possible_actions[ action.__str__() ]= action

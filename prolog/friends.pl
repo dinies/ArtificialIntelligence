@@ -32,7 +32,7 @@ country(alessia,roma).
 myFriends(Me,FriendList) :- findall(X, friend(X,Me), FriendList).
 
 
-%PROBBLEM infinite loops with Ram crash.
+%PROBLEM infinite loops with Ram crash.
 %removeElement([],[]).
 %removeElement([H|T], List) :- male(H), removeElement([T], ReturnList), List is [H|ReturnList].
 %removeElement([_|T], List) :- removeElement([T], ReturnList),  List is ReturnList.
