@@ -40,7 +40,7 @@ public class WorldPanel extends JPanel implements ActionListener, KeyListener{
 		//AgentSim sim=new AgentSim("world.mas",agents,initialTasks);
 
 		//creating WorldPanel
-		WorldPanel panel=new WorldPanel(sim,60);
+		WorldPanel panel=new WorldPanel(sim,20);
 
 		//creating and setting frame
 		JFrame frame=new JFrame("World");

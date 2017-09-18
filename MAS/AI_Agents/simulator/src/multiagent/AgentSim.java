@@ -80,6 +80,8 @@
 
 			for( Agent a : agents){
 				a.assignTasks(task_assigment);
+			
+				System.out.println(task_assigment.toString());
 			}
 
 			//check
@@ -106,7 +108,12 @@
 		public void initAgentsRandom(int numAgents){
 			agents=new LinkedList<Agent>();
 			for(int i=1;i<=numAgents;i++){
-				Cell cell = world.getCell((int)(world.getHeight()*Math.random()), (int)(world.getWidth()*Math.random()));
+				boolean  valid_flag = false;
+				Cell cell = null;
+				while (!valid_flag){
+					cell = world.getCell((int)(world.getHeight()*Math.random()), (int)(world.getWidth()*Math.random()));
+					valid_flag= !cell.isWeed();
+				}
 				Agent a = new Agent(i,cell, this.world);
 				agents.add(a);
 
@@ -173,6 +180,9 @@
 			Task previous_task= agent.getCurrentTask();
 			Task nextTask = world.executeAction(agent.getId(),agent.getCurrentTask(),act);
 
+			
+			System.out.println( " ALERT  agent  "+ agent.getId() + " has empty task list  after executing this action " + act.toString());
+			
 
 			//updates the state of the agents with the new agent position and the next task to be performed
 	        agent.updateState(world.getAgentPosition(agent.getId()),nextTask);

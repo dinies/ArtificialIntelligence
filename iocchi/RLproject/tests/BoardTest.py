@@ -14,6 +14,7 @@ class BoardTest(unittest.TestCase):
 		self.checkmate_board= Board.Board("k11/1PP/K11/111/111/111")
 		self.simple_capture_board= Board.Board("k11/111/1p1/P11/111/1K1")
 		self.stalemate_board= Board.Board("k11/P11/1K1/111/111/111")
+		self.last_row_reached_board= Board.Board("k11/111/111/111/111/p1K")
 		
 	def test_board_constructor(self):
 		self.assertEqual(self.board.rows_number, 6)
@@ -96,6 +97,14 @@ class BoardTest(unittest.TestCase):
 		self.assertTrue(self.stalemate_board.is_under_stalemate("black"))
 		self.assertFalse(self.stalemate_board.is_under_stalemate("white"))
 
+	def test_last_row_reached_with_pawn(self):
+		self.assertTrue(self.last_row_reached_board.last_row_reached_with_pawn("black"))
+		self.assertFalse(self.last_row_reached_board.last_row_reached_with_pawn("white"))
+		self.assertFalse(self.simple_capture_board.last_row_reached_with_pawn("white"))
+		self.assertFalse(self.stalemate_board.last_row_reached_with_pawn("white"))
+		self.assertFalse(self.checkmate_board.last_row_reached_with_pawn("black"))
+
+
 	def test_str__(self):
 		self.assertEqual(self.board.__str__(), "1k1/ppp/111/111/PPP/1K1")
 		self.assertEqual(self.check_board.__str__(), "111/111/1k1/111/p11/1K1")
@@ -108,6 +117,7 @@ class BoardTest(unittest.TestCase):
 		self.checkmate_board= None
 		self.simple_capture_board= None
 		self.stalemate_board= None
+		self.last_row_reached_board= None
 
        
 if __name__ == '__main__':

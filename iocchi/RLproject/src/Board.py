@@ -92,13 +92,13 @@ class Board(object):
 			for piece in self.white.pieces:
 				if isinstance(piece, King.King):
 					agent_king= piece
-			agent_king_square= agent_king.square
+					agent_king_square= agent_king.square
 			enemy_attacked_squares= self.black.attacked_squares
 		else:
 			for piece in self.black.pieces:
 				if isinstance(piece, King.King):
 					agent_king= piece
-			agent_king_square= agent_king.square
+					agent_king_square= agent_king.square
 			enemy_attacked_squares= self.white.attacked_squares	
 		return agent_king_square in enemy_attacked_squares
 
@@ -145,6 +145,26 @@ class Board(object):
 			return not self.is_under_check("black") and len( agent_king.get_possible_actions(self) ) == 0
 		
 
+	def last_row_reached_with_pawn(self,agent_color):
+		pawn_found= False
+		column_indexes=  string.ascii_lowercase[:self.columns_number]
+		if agent_color == "white":
+			last_row_index= str(self.rows_number)
+			for char in column_indexes:
+				square_key= char + last_row_index
+				square=self.squares[square_key]
+				if square.piece != None:
+					if square.piece.__str__() == "P":
+						pawn_found= True
+		else:
+			last_row_index= str(1)
+			for char in column_indexes:
+				square_key= char + last_row_index
+				square=self.squares[square_key]
+				if square.piece != None:
+					if square.piece.__str__() == "p":
+						pawn_found= True
+		return pawn_found
 
 	def parse_int(self,s):
 		try:

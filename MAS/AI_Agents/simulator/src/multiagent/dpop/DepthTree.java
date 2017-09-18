@@ -98,7 +98,7 @@ public class DepthTree {
 				current_node_index= nextNode(graph, nodes_visited);
 
 				if (previous_node_index != -1){
-					addNewEdge(previous_node_index, current_node_index, false);
+					addNewEdge(current_node_index, previous_node_index, false);
 
 					for ( int i : graph.get(current_node_index)){
 						if (nodes_visited.contains(i)){

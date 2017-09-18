@@ -9,7 +9,7 @@ from src import Square
 
 class AgentTest(unittest.TestCase):
 	def setUp(self):
-		self.minimal_board =  Board.Board("111/111/111/111/1P1/11K")
+		self.minimal_board =  Board.Board("1k1/111/111/111/1P1/11K")
 		self.initial_board =  Board.Board("1k1/ppp/111/111/PPP/1K1")
 		self.capture_board =  Board.Board("k11/111/pKp/1P1/111/111")
 		self.minimal_agent= self.minimal_board.white
@@ -34,11 +34,15 @@ class AgentTest(unittest.TestCase):
 		act_2= Action.Action( king , s_c2)
 		act_3= Action.Action( pawn , s_b3)
 
-		true_list = [ act_1, act_2 , act_3]
+		true_dict = { 
+			act_1.__str__() : act_1,
+			act_2.__str__() : act_2,
+			act_3.__str__() : act_3
+			}
 
-		action_list= self.minimal_board.white.compute_possible_actions()
+		action_dict= self.minimal_board.white.compute_possible_actions()
 
-		self.assertEqual( true_list, action_list)
+		self.assertEqual( true_dict, action_dict)
 
 
 if __name__ == '__main__':

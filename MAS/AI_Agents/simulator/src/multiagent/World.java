@@ -161,7 +161,8 @@ public class World{
 
 		Iterator<Cell> iter= this.weedCellSubset.iterator();
 		while(iter.hasNext()){
-			if (iter.next().isWeed()){
+			Cell elem= iter.next();
+			if (elem.isWeed() && !elem.isSprayed() ){
 				all_done= false;
 			}
 		}

@@ -97,6 +97,9 @@ public class Agent implements Serializable{
 	 * Adds this cell to the pending tasks list only if has weeds and is not harvested
 	 */
 	public void addpTask(Task t){
+		if (t.getCell().isWeed() && t.getCell().isSprayed()){
+			 System.out.println(" AHAHAHAH AHAHAHAH AHAHAHAHAHA");
+		}
 		if (t.getCell().isWeed() && !t.getCell().isSprayed())
 			pendingTasks.add(t);
 	}
@@ -188,8 +191,7 @@ public class Agent implements Serializable{
 		this.position = nextPosition;
 		this.currentTask = nextTask;
 
-		if ( nextTask!=null){
-			if (nextTask.getStatus()!= Task.Status.DONE){
+		if ( nextTask!=null && nextTask.getStatus()!= Task.Status.DONE ){
 
 				if ( nextTask.getCell() != nextPosition){
 					this.currentAction= Action.moveToLocation;
@@ -207,10 +209,8 @@ public class Agent implements Serializable{
 				this.currentAction= Action.publishNextTask;
 				
 			}
-		}else{
-			this.currentAction= Action.noOp;
+	
 		}
-	}
 
 
 	/**

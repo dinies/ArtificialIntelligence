@@ -30,6 +30,7 @@ class Agent(object):
 			possible_actions= piece.get_possible_actions(self.board)
 			for action in possible_actions:
 				self.possible_actions[ action.__str__() ]= action
+		return self.possible_actions
 			
 	def remove_captured_piece(self, piece):
 		piece_square = piece.square
