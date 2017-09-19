@@ -153,13 +153,7 @@ public class DepthTree {
 		for( Node n : nodes){
 			n.fillValueRelation(valueStruct.get(n.getId()));
 		}
-		//bottom-up
-		// if ( !treeIndexList.getFirst().isRoot()){
-		// 	System.out.println("Root node is not recognised");
-		// }
-		// if ( !treeIndexList.getLast().isLeaf()){
-		// 	System.out.println("Leaf node is not recognised");
-		// }
+		
 		Iterator<Integer> iter_bottom_up= treeIndexList.descendingIterator();
 
 		while (iter_bottom_up.hasNext()){
@@ -179,9 +173,6 @@ public class DepthTree {
 			task_assigment.put(node_id, task_index);
 			already_assigned.add(task_index);
 
-		}
-		if ( already_assigned.size() != treeIndexList.size()){
-			System.out.println("there is some problem with task assigment");
 		}
 		return task_assigment;
 	}

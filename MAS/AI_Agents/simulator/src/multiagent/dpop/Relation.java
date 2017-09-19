@@ -190,6 +190,15 @@ class Relation {
 	 * in the utility message vector given as param
 	 * fianlly it will overwrite the utility message
 	 * @param childrenJointValue List of values for each variable
+	 *   value_table = [ 0 2 3			childrenJointValue= [ 2 5 6 ]
+	 *					 5 0 1
+	 *					 9 1 0 ]
+	 *
+	 * 	joint_max_utility_table = [ 0+2 2+2 3+2 		[  2  4  5
+	 *								5+5 0+5 1+5		==>   10  5  6
+	 *								9+6 1+6 0+6]		  15  7  6 ]
+	 *
+	 *	final_util_message= [ 15  7  6 ]								
 	 */
 	public void jointMaxSumUtilMessages(  LinkedList<Integer> childrenJointValue){
 		LinkedList<Integer> new_utility_message= new LinkedList<>();
