@@ -76,12 +76,14 @@
 			//DCOP execution (at the end all the tasks that belong to the subset will be assigned)
 
 			HashMap<Integer, LinkedList<Integer>> struct = this.computePathValues();
+
+			System.out.println("Path values :    "  + struct.toString());
+
 			HashMap<Integer, Integer> task_assigment= depthTree.executeDCOP( struct);
+			System.out.println( "Task assigment :  "+ task_assigment);
 
 			for( Agent a : agents){
 				a.assignTasks(task_assigment);
-			
-				System.out.println(task_assigment.toString());
 			}
 
 			//check
@@ -178,11 +180,7 @@
 			//e.g. move to a task already executed and return the new task computed according to the wanted action
 
 			Task previous_task= agent.getCurrentTask();
-			Task nextTask = world.executeAction(agent.getId(),agent.getCurrentTask(),act);
-
-			
-			System.out.println( " ALERT  agent  "+ agent.getId() + " has empty task list  after executing this action " + act.toString());
-			
+			Task nextTask = world.executeAction(agent.getId(),agent.getCurrentTask(),act);			
 
 			//updates the state of the agents with the new agent position and the next task to be performed
 	        agent.updateState(world.getAgentPosition(agent.getId()),nextTask);
@@ -218,7 +216,7 @@
 	            return true;
 	        else{
 	        	  if (this.world.checkSprayedInSubSet()){
-	        		System.out.println("DCOP EXEC");
+	        		System.out.println("\nDCOP EXEC");
 	        		executionDCOPlogic();
 	        	}
 	        }
@@ -356,8 +354,7 @@
 		public String statsToString(){
 			StringBuilder builder=new StringBuilder();
 
-			builder.append("Total cells: "+ getTotalCells());
-			builder.append("\n---> FILL ME in AgentSim.statsToString()<---\n");
+			builder.append("Total cells: "+ getTotalCells()+"\n");
 			for(int i = 0; i < this.world.getHeight(); i++){
 				for(int j = 0; j < this.world.getWidth(); j++){
 					if (this.world.getCell(i, j).getTask() != null){

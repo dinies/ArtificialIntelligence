@@ -146,6 +146,10 @@ public class World{
 					subset.add(iter.next());
 				}
 			}
+
+			for( Cell c : subset){
+				System.out.println( " subset cell in position "+ c.getRow() + ", " + c.getCol());
+			}
 			this.weedCellSubset= subset;
 	}
 
