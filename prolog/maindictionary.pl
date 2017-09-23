@@ -125,6 +125,14 @@ subsetOP([], _).
 subsetOP( [X | Tail] , Set):-  containedOP( X , Set), removeOP(X, Set, New), subsetOP( Tail, New).
 
 
+
+%%orderedInsertionOP/3 auxiliary fun: given an ordered list @2 insert the elem @1 avoiding multiple insertion following an increasing magnitude order returning the list @3
+orderedInsertionOP( [] , L, L).
+orderedInsertionOP( E , [] , [E] ).
+orderedInsertionOP( E , [H|T] , L):- H > E, orderedInsertionOP( [] , T, K), prependOP( H, K, Y), prependOP( E, Y, L), !.
+orderedInsertionOP( E , [H|T] , L):- H =< E, orderedInsertionOP( E , T, K), prependOP( H, K, L), !.
+
+
 %insertionSortOP  it return an ordered list @2 computing an insertion sort policy given a list as param @1
 %[1,3,2] -> []
 %[3,2] -> [1]
@@ -132,14 +140,9 @@ subsetOP( [X | Tail] , Set):-  containedOP( X , Set), removeOP(X, Set, New), sub
 %[] -> [1,2,3]
 
 %insertionSortOP/2 main fun that given an unordered list of ints @1 return an ordered one @2
-insertionSortOP([H|[]], [H]).
+insertionSortOP([H|[]], [H]):-!.
 insertionSortOP([H|T], L):- insertionSortOP( T, K), orderedInsertionOP( H , K , L).
 
-%%orderedInsertionOP/3 auxiliary fun: given an ordered list @2 insert the elem @1 avoiding multiple insertion following an increasing magnitude order returning the list @3
-orderedInsertionOP( [] , L, L).
-orderedInsertionOP( E , [] , [E] ).
-orderedInsertionOP( E , [H|T] , L):- H > E, orderedInsertionOP( [] , T, K), prependOP( H, K, Y), prependOP( E, Y, L), !.
-orderedInsertionOP( E , [H|T] , L):- H =< E, orderedInsertionOP( E , T, K), prependOP( H, K, L), !.
 
 
 

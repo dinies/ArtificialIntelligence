@@ -22,6 +22,21 @@ class StateTest(unittest.TestCase):
 		true_next_board_state= "1k1/ppp/111/111/PPP/K11"
 		self.assertEqual(self.initial_state.execute_action(action), true_next_board_state)
 
+
+	def test_get_reward_win(self):
+		self.assertEqual( 100, self.final_state_checkmate.get_reward("white"))
+		self.assertEqual( 100, self.final_state_pawn_in_last_row.get_reward("white"))
+
+	def test_get_reward_lose(self):
+		self.assertEqual( -100, self.final_state_checkmate.get_reward("black"))
+		self.assertEqual( -100, self.final_state_pawn_in_last_row.get_reward("black"))
+
+
+	def test_get_reward_stalemate(self):
+		self.assertEqual( -5, self.final_state_stalemate.get_reward("white"))
+		self.assertEqual( -5, self.final_state_stalemate.get_reward("black"))
+
+	
 	def test_is_final_state_stalemate(self):
 		self.assertTrue( self.final_state_stalemate.is_final_state())	
 

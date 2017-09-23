@@ -1,0 +1,47 @@
+Database
+
+db_name: chessqboard
+db_name: chessqtest
+
+user_name: 'chessagent'@'localhost' pass: chessagent
+user_name: 'chesstester'@'localhost' pass: chesstester
+
+
+
+
+Tables:
+
+Qtable
+
+state action avg_reward 
+
+PrimaryKey(state,action)
+
+
+
+
+R_table
+
+auto_id  state action reward n_epoque n_iteration  
+
+PrimaryKey(auto_id)
+
+views:
+
+epoques
+
+number    avg_reward
+
+
+
+Queries
+
+insert Qentry
+update Qentry
+
+insert Rentry
+
+get avg_rew from Rtable
+
+get max n_epoque
+get max n_iteration

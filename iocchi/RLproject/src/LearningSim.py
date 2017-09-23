@@ -1,21 +1,28 @@
 import State
 class LearningSim(object):
 	"""docstring for LearningSim"""
-	def __init__(self, initial_board_state, max_epoque_steps):
+	def __init__(self, initial_board_state, max_epoque_steps, agent_chosen,db):
 		s= State.State(initial_board_state)
 		self.initial_state= s
 		self.max_epoque_steps= max_epoque_steps
-        self.agent_chosen= "white"
+        self.agent_chosen= agent_chosen
+        self.database= db
 		#self.current_state= s
 		# create database connection
 
 
-	def every_visit_montecarlo_execution(self):
+	def montecarlo_epoque_exec(self,iteration):
 		#loop
 				#generate episode retriving Q_table entries for current_state and choose the next action following softmax policy with e-greedy
 				epoque= self.generate_epoque(self.initial_state)
 
-                reward_epoque= epoque[len(epoque)-1][0].get_reward(self.agent_chosen)
+                [last_state, last_action, last_turn] = epoque[len(epoque)-1]
+
+                if not last_state.is_final_state() :
+                    reward_epoque= -1
+                else:
+                    reward_epoque= last_state.get_reward(self.agent_chosen)
+
 
                 #then for every state action pair in the epoque
                 # if the turn was of white then update Q table with reward_epoque_scaled
@@ -23,14 +30,27 @@ class LearningSim(object):
                 # logic : agent learn Q entries both from moves made by him but also
                 # from the moves made from the opponent
 
-
+                epoque_num= self.database.get_last_epoque_number()
+                epoque_num+=1
 				#execute montecarlo for every state in episode
-				for  [ state , action , next_state , turn] in epoque :
-					# reward= next_state.get_reward( turn ) no
-					#database   insert in R table this tuple state,action, reward
-					#database   get avg of rewards for this pair state action
-					#database   update Q table with this avg
+				for  [ state , action , turn] in epoque :
 
+                    if turn== self.agent_chosen:
+                        reward= reward_epoque
+                    else:
+                        reward= -reward_epoque
+
+					#database   insert in R table this tuple state,action, reward
+                    self.database.insert_reward_in_R( state.__str__(), action.__str__(), reward, epoque_num, iteration)
+					#database   get avg of rewards for this pair state action
+                    past_avg_rewards= self.database.get_rewards_from_stateAction_pair_in_R(state.__str__(),action.__str__())
+
+                    #compute the avg with also the new reward
+                    new_avg= ...
+
+
+					#database   update Q table with this avg
+                    self.database.update_avg_reward_in_Q(state.__str__(),action.__str__(),new_avg)
 
 				#update the Q_table in DB ( the policy follows strictly from the Q_table)
 				#register the epoch number and iteration number in DB table
@@ -48,19 +68,20 @@ class LearningSim(object):
 
     		#choose an action according to policy
     		action=## implement database query for Q_table in database
-    		#execute action
+    		#execute action. choosing with softmax and maybe with epsilon greedy
     		next_state_str= state.execute_action( action )
     		next_state= State.State(next_state_str)
-    		sas_tuple= [ state, action, next_state, turn]
-    		state_action_tuples.append( sas_tuple )
+    		sa_tuple= [ state, action, turn]
+    		state_action_tuples.append( sa_tuple )
 
     		state= next_state
             if turn == "white":
                 turn= "black"
             else:
                 turn= "white"
-    	
-    	state_action_pairs.append( [state, None, None, turn])
+    	if state.is_final_state():
+            state_action_tuples.append( [state, None, turn ])
+
     	return state_action_tuples
    
 
