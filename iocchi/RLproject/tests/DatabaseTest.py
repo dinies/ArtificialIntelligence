@@ -5,150 +5,150 @@ from src import Database
 
 class DatabaseTest(unittest.TestCase):
 	def setUp(self):
-		self.test_db = MySQLdb.connect("localhost","chesstester","chesstester","chessqtest" )
+		self.true_db = MySQLdb.connect("localhost","chesstester","chesstester","chessqtest" )
+		self.db_under_test= Database.Database("chesstester", "chessqtest")
 
 		queries=[
-		"CREATE TABLE QTABLE (STATE  VARCHAR(100) NOT NULL,ACTION  VARCHAR(10) NOT NULL,REWARD INT,PRIMARY KEY(STATE,ACTION))",
+		"CREATE TABLE QTABLE (STATE  VARCHAR(100) NOT NULL,ACTION  VARCHAR(10) NOT NULL,REWARD FLOAT(2),PRIMARY KEY(STATE,ACTION))",
 
 		"CREATE TABLE RTABLE (ID INTEGER PRIMARY KEY AUTO_INCREMENT,STATE  VARCHAR(100) NOT NULL,ACTION  VARCHAR(10) NOT NULL,REWARD INT,EPOQUE INT,ITERATION INT )",
 
-		"INSERT INTO RTABLE (state, action, reward, epoque, iteration) VALUES (%s,%s, %s, %s, %s)"
+		"INSERT INTO RTABLE (state, action, reward, epoque, iteration) VALUES (%s,%s, %s, %s, %s)",
+
+		"INSERT INTO QTABLE (state, action, reward) VALUES (%s,%s, %s)"
+
 		]
 
-		values= [
+		Rvalues= [
 		["1k1/ppp/111/111/PPP/1K1", "K.a2-a1", -5,1,2],
-		["1k1/ppp/111/111/PPP/1K1", "K.a2-c1", 100,1,2],
-		["1k1/ppp/111/111/PPP/1K1", "K.a2-a1", -100, 1, 2],
-		["1k1/ppp/111/111/PPP/1K1", "K.a2-a1", -52, 1, 2],
-		["1k1/ppp/111/111/PPP/1K1", "K.a2-c1", 100, 1, 2]
+		["1k1/ppp/111/111/PPP/1K1", "K.a2-c1", 100,5,2],
+		["1k1/ppp/111/111/PPP/1K1", "K.a2-a1", -100, 2, 4],
+		["1k1/ppp/111/111/PPP/1K1", "K.a2-a1", -52, 5, 2],
+		["1k1/ppp/111/111/PPP/1K1", "K.a2-c1", 100, 3, 1]
 		]
 
-		cursor=self.test_db.cursor()		
-		cursor.execute(queries[0])
-		cursor.execute(queries[1])
+		Qvalues=[
+		["1k1/ppp/111/111/PPP/1K1", "K.a2-a1", sum([-5,-100,-52])/3],
+		["1k1/ppp/111/111/PPP/1K1", "K.a2-c1", 100],
+		]
+		self.cursor=self.true_db.cursor()		
+		self.cursor.execute(queries[0])
+		self.cursor.execute(queries[1])
 
-		for vec in values:
+		for vec in Rvalues:
 			try:
-				cursor.execute(queries[2], (vec[0], vec[1], vec[2], vec[3], vec[4]))
-				self.test_db.commit()
+				self.cursor.execute(queries[2], (vec[0], vec[1], vec[2], vec[3], vec[4]))
+				self.true_db.commit()
 			except:
-				self.test_db.rollback()
+				self.true_db.rollback()
+
+		for vec in Qvalues:
+			try:
+				self.cursor.execute(queries[3], (vec[0], vec[1], vec[2]))
+				self.true_db.commit()
+			except:
+				self.true_db.rollback()
+
 
 	def test_insert_reward_in_R(self):
-		db= Database.Database("chesstester", "chessqtest")
-		db.insert_reward_in_R("1k1/ppp/111/111/PPP/1K1","K.a2-a3",100,2,2)
+		self.db_under_test.insert_reward_in_R("1k1/ppp/111/111/PPP/1K1","K.a2-a3",100,2,2)
 
-		sql_select="SELECT REWARD FROM RTABLE WHERE state= %s AND action=%s "
+		sql_select="SELECT * FROM RTABLE WHERE state= %s AND action=%s "
 
 		state="1k1/ppp/111/111/PPP/1K1"
 		action="K.a2-a3"
 
-		cursor = self.test_db.cursor()
+		self.cursor.execute(sql_select, (state,action))
 
-		cursor.execute(sql_select, (state,action))
-		result=cursor.fetchone()
-		self.assertEqual(100,result[0])
+		result=self.cursor.fetchone()
+		self.assertEqual("1k1/ppp/111/111/PPP/1K1",result[1])
+		self.assertEqual("K.a2-a3",result[2])
+		self.assertEqual(100,result[3])
+		self.assertEqual(2,result[4])
+		self.assertEqual(2,result[5])
 
-	@unittest.skip("demonstrating skipping")
-	def test_get_rewards_from_stateAction_pair_in_R(self):
-		db= Database.Database("chesstester", "chessqtest")
-		db.insert_Qentry("1k1/ppp/111/111/PPP/1K1","K.a2-a3",100,12,13)
+	def test_get_rewards_in_R(self):
 
-		sql_select=...
-		cursor = db.cursor()
-
-		cursor.execute(sql_select)
-
-		data = cursor.fetchone()
+		true_rewards= [-5,-100,-52]
+		rewards= self.db_under_test.get_rewards_in_R("1k1/ppp/111/111/PPP/1K1","K.a2-a1")
+		self.assertEqual(true_rewards, rewards)
 	
 
 	@unittest.skip("demonstrating skipping")
 	def test_update_avg_reward_in_Q(self):
-		db= Database.Database("chesstester", "chessqtest")
-		db.insert_Qentry("1k1/ppp/111/111/PPP/1K1","K.a2-a3",100,12,13)
 
-		sql_select=...
+		state="1k1/ppp/111/111/PPP/1K1"
+		action="K.a2-c1"
+
+		self.db_under_test.update_avg_reward_in_Q(state,action,30.45)
+
+		sql_select= "SELECT * FROM QTABLE WHERE state= %s AND action=%s "
 		cursor = db.cursor()
 
-		cursor.execute(sql_select)
+		cursor.execute(sql_select, (state,action))
 
-		data = cursor.fetchone()
+		result=cursor.fetchone()
+		self.assertEqual(state,result[0])
+		self.assertEqual(action,result[1])
+		self.assertEqual(30.45,result[2])
 
 
-	@unittest.skip("demonstrating skipping")
 	def test_get_best_action_from_Q(self):
-		db= Database.Database("chesstester", "chessqtest")
-		db.insert_Qentry("1k1/ppp/111/111/PPP/1K1","K.a2-a3",100,12,13)
+		result= self.db_under_test.get_best_action_from_Q("1k1/ppp/111/111/PPP/1K1")
 
-		sql_select=...
-		cursor = db.cursor()
-
-		cursor.execute(sql_select)
-
-		data = cursor.fetchone()
+		self.assertEqual( result, "K.a2-c1" )
 
 
-
-	@unittest.skip("demonstrating skipping")
 	def test_get_last_epoque_number(self):
-		db= Database.Database("chesstester", "chessqtest")
-		db.insert_Qentry("1k1/ppp/111/111/PPP/1K1","K.a2-a3",100,12,13)
+		result= self.db_under_test.get_last_epoque_number()
 
-		sql_select=...
-		cursor = db.cursor()
+		self.assertEqual(result, 5 )
 
-		cursor.execute(sql_select)
-
-		data = cursor.fetchone()
-	
-	@unittest.skip("demonstrating skipping")	
 	def test_get_last_iteration_number(self):
-		db= Database.Database("chesstester", "chessqtest")
-		db.insert_Qentry("1k1/ppp/111/111/PPP/1K1","K.a2-a3",100,12,13)
+		result= self.db_under_test.get_last_iteration_number()
 
-		sql_select=...
-		cursor = db.cursor()
+		self.assertEqual(result, 4 )
 
-		cursor.execute(sql_select)
+	def test_get_epoque_cumulative_reward_in_R(self):
+		result= self.db_under_test.get_epoque_cumulative_reward_in_R(2)
 
-		data = cursor.fetchone()
-
-
-	@unittest.skip("demonstrating skipping")
-	def test_get_cumulative_reward_in_R(self):
-		db= Database.Database("chesstester", "chessqtest")
-		db.insert_Qentry("1k1/ppp/111/111/PPP/1K1","K.a2-a3",100,12,13)
-
-		sql_select=...
-		cursor = db.cursor()
-
-		cursor.execute(sql_select)
-
-		data = cursor.fetchone()
+		self.assertEqual(result, -100.00)
 
 
-	@unittest.skip("demonstrating skipping")
-	def test_get_size_in_state_of_Q(self):
-		db= Database.Database("chesstester", "chessqtest")
-		db.insert_Qentry("1k1/ppp/111/111/PPP/1K1","K.a2-a3",100,12,13)
+	def test_get_iteration_cumulative_reward_in_R(self):
+		result= self.db_under_test.get_iteration_cumulative_reward_in_R(2)
 
-		sql_select=...
-		cursor = db.cursor()
+		self.assertEqual(result, 14.33 )
 
-		cursor.execute(sql_select)
+	def test_get_cumulative_reward_in_Q(self):
+		result= self.db_under_test.get_cumulative_reward_in_Q()
 
-		data = cursor.fetchone()
+		self.assertEqual(result, 23.83 )
+
+
+	def test_get_size_of_Q(self):
+		result= self.db_under_test.get_size_of_Q()
+
+		self.assertEqual(result, 2 )
 
 
 
 	def tearDown(self):
-		queries=[
-		"DROP TABLE QTABLE"
-		]
-		cursor=self.test_db.cursor()
-		for q in queries:
-			cursor.execute(q)
-		self.test_db.close()
+		self.db_under_test.close_connection()
+		drop_Q_table="DROP TABLE QTABLE"
+		drop_R_table="DROP TABLE RTABLE"
+		try:
+			self.cursor.execute(drop_Q_table)
+		except Exception as e:
+			print(e)
+			print("\nnon si cancella q table")
+
+		try:
+			self.cursor.execute(drop_R_table)
+		except Exception as e:
+			print(e)
+			print("\n non si cancella r table")
+		self.true_db.close()
 
 
 if __name__ == '__main__':

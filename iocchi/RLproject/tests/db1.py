@@ -16,9 +16,9 @@ action_str="K.a2-a3"
 try:
 	cursor.execute(ins_q, (state_str,action_str, str(3)))
 	db.commit()
-	print ("c'e l'ho fatta2")
+	print ("c'e l'ho fatta1")
 except:
 	db.rollback()
-	print("nada2")
+	print("nada1")
 
 db.close()
