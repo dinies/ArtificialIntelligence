@@ -1,4 +1,5 @@
 from src import Board
+import pdb
 
 class State(object):
 	"""docstring for State"""
@@ -6,45 +7,52 @@ class State(object):
 		self.board= Board.Board(board_state)
 		self.winner= None  #maybe useless
 
-	def is_final_state(self):
-		
-		finished= False
-		if self.board.last_row_reached_with_pawn("white") or self.board.last_row_reached_with_pawn("black"):
-			finished= True
-		if self.board.is_under_checkmate("white") or self.board.is_under_checkmate("black"):
-			finished= True
-		if self.board.is_under_stalemate("white") or self.board.is_under_stalemate("black"):
-			finished= True
-		return finished
+	def is_losing_state_for_agent(self,agent_color):
+		if agent_color=="white":
+			opponent_color= "black"
+		else:
+			opponent_color="white"
+		return  self.board.last_row_reached_with_pawn(opponent_color) or self.board.is_under_checkmate(agent_color,self) or self.board.is_under_stalemate(agent_color,self)
+	
+
 	def get_winner(self):
 		pass
 
-	def possible_actions(self, agent_color = "white"):
+	def possible_actions(self, agent_color):
 		if agent_color == "white" :
 			self.board.white.compute_possible_actions()
-			return self.board.white.possible_actions
+			return self.discard_not_admissible_actions( self.board.white.possible_actions , "white")
 		else :
 			self.board.black.compute_possible_actions()
-			return self.board.black.possible_actions
+			return self.discard_not_admissible_actions( self.board.black.possible_actions , "black")
 
 
 	def get_reward(self, agent_color):
-		if self.board.is_under_stalemate("black") or self.board.is_under_stalemate("white"):
+		if self.board.is_under_stalemate("black",self) or self.board.is_under_stalemate("white",self):
 			return -5
 		else:
-			if self.board.last_row_reached_with_pawn("white") or self.board.is_under_checkmate("black"):
+			if self.board.last_row_reached_with_pawn("white") or self.board.is_under_checkmate("black",self):
 				if agent_color== "white":
 					return 100
 				else:
 					return -100
-			if self.board.last_row_reached_with_pawn("black") or self.board.is_under_checkmate("white"):
+			if self.board.last_row_reached_with_pawn("black") or self.board.is_under_checkmate("white",self):
 				if agent_color== "white":
 					return -100
 				else:
 					return 100
 
 	
+	def discard_not_admissible_actions(self, possible_actions, agent_color):
+		admissible_actions= {}
 
+		for key in possible_actions.keys():
+			action= possible_actions[key]
+			next_board_state_str= self.execute_action( action )
+			next_board=Board.Board(next_board_state_str)
+			if not next_board.is_under_check(agent_color): 
+				admissible_actions[key]= action
+		return admissible_actions
 
 	def execute_action(self, action):
 		

@@ -6,7 +6,6 @@ from src import Square
 from src import Action
 
 
-
 class KingTest(unittest.TestCase):
     def setUp(self):
         self.initial_board = Board.Board("1k1/ppp/111/111/PPP/1K1")
@@ -171,8 +170,25 @@ class KingTest(unittest.TestCase):
         self.assertEqual(square_list, true_list)
 
 
+    def test_king_not_going_in_attacked_squares(self):
+
+        piece= King.King("white")
+        s = Square.Square("c", 2)
+        piece.add_square(s)
+
+        target_square = Square.Square("b", 2)
+        action= Action.Action(piece,target_square)
+
+
+        board=Board.Board( "111/11k/P11/p11/11K/111")
+        white_king= board.white.pieces[1]
+        possible_actions=white_king.get_possible_actions(board)
+        self.assertTrue( action not in possible_actions)
+     
+
     def test_str__(self):
         self.assertEqual(self.initial_king.__str__(), "K") 
+
 
 
 

@@ -4,6 +4,7 @@ from src import Board
 from src import King
 from src import Pawn
 from src import Square
+from src import State
 
 
 
@@ -90,12 +91,14 @@ class BoardTest(unittest.TestCase):
 		self.assertEqual(self.simple_capture_board.__str__(), "k11/111/111/p11/111/1K1")
 
 	def test_is_under_checkmate(self):
-		self.assertTrue(self.checkmate_board.is_under_checkmate("black"))
-		self.assertFalse(self.checkmate_board.is_under_checkmate("white"))
+		state= State.State(self.checkmate_board.__str__())
+		self.assertTrue(self.checkmate_board.is_under_checkmate("black",state))
+		self.assertFalse(self.checkmate_board.is_under_checkmate("white",state))
 
 	def test_is_under_stalemate(self):
-		self.assertTrue(self.stalemate_board.is_under_stalemate("black"))
-		self.assertFalse(self.stalemate_board.is_under_stalemate("white"))
+		state= State.State(self.checkmate_board.__str__())
+		self.assertTrue(self.stalemate_board.is_under_stalemate("black",state))
+		self.assertFalse(self.stalemate_board.is_under_stalemate("white",state))
 
 	def test_last_row_reached_with_pawn(self):
 		self.assertTrue(self.last_row_reached_board.last_row_reached_with_pawn("black"))

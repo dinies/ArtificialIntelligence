@@ -319,26 +319,41 @@ sortmOP( [X] , [X]):- !.
 sortmOP( X , K) :- splitHalfOP( X , L, R) , sortmOP( L, W), sortmOP(R,Z), concatsortedOP( W, Z, K),!.
 
 
+%given a list in which there could be subsequent duplicates , group them in sublists and return the composed list. [a,b,b,c]-->[a,[b,b],c]
+
+add_dupl(X,L,R):- reverseOP(L, [ X|T]), reverseOP( [[X,X]|T],R).
+
+add_dupl(X,L,R):- reverseOP(L, [ [ X| T1] | T2]), reverseOP( [[ X|[X|T1]]|T2],R).
+
+check_dupl(X,L):-reverseOP(L,[X|_]).
+
+check_dupl(X,L):-reverseOP(L,[[X|_]|_]).
+
+pack_aux([], K,K).
+
+pack_aux([H|T], L, R):- check_dupl(H,L),add_dupl(H,L,K),pack_aux(T,K,R).
+
+pack_aux([H|T], L, R):- appendOP(H,L,K),pack_aux(T,K,R).
+
+pack([H|T], R):-pack_aux(T,[H],R),!.
 
 
+extract_ISBN_in_list( [] , []).
+extract_ISBN_in_list( [ libro(_,_,_,X) | Tail ] , [X|Rest] ):- extract_ISBN_in_list(  Tail ,Rest ).
 
 
+check_simple_list_order( [] ):-!.
+check_simple_list_order( [ _|[]] ):-!. 
+check_simple_list_order( [ H1| [ H2|T2 ]] ):- H1 =< H2, check_simple_list_order([H2|T2]).
 
+
+check_ISBN_order( L ):- extract_ISBN_in_list( L, Isbn), check_simple_list_order( Isbn).
 
 
 
 
 
 %>>checked until there.
-
-
-
-
-
-
-
-
-
 
 %findall    :   bagof   : setof
 

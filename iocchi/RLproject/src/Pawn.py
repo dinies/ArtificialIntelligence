@@ -20,8 +20,9 @@ class Pawn(Piece.Piece):
 			row_index= row - 1
 
 		s_key= column + str(row_index)
-		if board.is_free_square(s_key):
-			reac_squares.append( board.squares[s_key] )
+		if board.contains_square(s_key):
+			if board.is_free_square(s_key):
+				reac_squares.append( board.squares[s_key] )
 		return reac_squares
 
 	def get_possible_actions(self,board):

@@ -3,7 +3,8 @@ from src import Piece
 from src import Agent
 from src import Pawn
 from src import King
-
+from src import State
+import pdb
 import string
 
 class Board(object):
@@ -88,6 +89,7 @@ class Board(object):
 
 
 	def is_under_check(self, agent_color):
+		agent_king_square= None
 		if agent_color == "white":
 			for piece in self.white.pieces:
 				if isinstance(piece, King.King):
@@ -99,7 +101,9 @@ class Board(object):
 				if isinstance(piece, King.King):
 					agent_king= piece
 					agent_king_square= agent_king.square
-			enemy_attacked_squares= self.white.attacked_squares	
+			enemy_attacked_squares= self.white.attacked_squares
+		# if agent_king_square== None:
+		# 	print(self.__str__())
 		return agent_king_square in enemy_attacked_squares
 
 
@@ -118,32 +122,44 @@ class Board(object):
 		self.black.compute_attacked_squares()
 
 
+	# there is an inconsitency: if there is a state in which a king is under check and it has not adjacent
+	# squares available to move into, then it is not even checkmate because there is another posiibility:
+	# namely that another piece could remove the checking treath by capturing the responsible enemy piece.
+	# So in the implementation is_check_mate only if the king is under check and all the possible actions of
+	# the AGENT who the king belongs can't break the check
 
-	def is_under_checkmate(self, agent_color):
-		if agent_color == "white":
-			for piece in self.white.pieces:
-				if isinstance(piece, King.King):
-					agent_king= piece
-			return self.is_under_check("white") and len( agent_king.get_possible_actions(self) ) == 0
+	def is_under_checkmate(self, agent_color, state):
+		if self.is_under_check(agent_color):
+			if agent_color=="white":
+				return len(state.possible_actions("white"))==0
+			else:
+				return len(state.possible_actions("black"))==0
 		else:
-			for piece in self.black.pieces:
-				if isinstance(piece, King.King):
-					agent_king= piece
-			return self.is_under_check("black") and len( agent_king.get_possible_actions(self) ) == 0
+			return False
+
+
+
+		# if agent_color == "white":
+		# 	for piece in self.white.pieces:
+		# 		if isinstance(piece, King.King):
+		# 			agent_king= piece
+		# 	return self.is_under_check("white") and len( agent_king.get_possible_actions(self) ) == 0
+		# else:
+		# 	for piece in self.black.pieces:
+		# 		if isinstance(piece, King.King):
+		# 			agent_king= piece
+		# 	return self.is_under_check("black") and len( agent_king.get_possible_actions(self) ) == 0
 		
 	
-	def is_under_stalemate(self, agent_color):
-		if agent_color == "white":
-			for piece in self.white.pieces:
-				if isinstance(piece, King.King):
-					agent_king= piece
-			return not self.is_under_check("white") and len( agent_king.get_possible_actions(self) ) == 0
+	def is_under_stalemate(self, agent_color, state):
+		if not self.is_under_check(agent_color):
+			if agent_color=="white":
+				return len( state.possible_actions("white"))==0
+			else:
+				return len( state.possible_actions("black"))==0
 		else:
-			for piece in self.black.pieces:
-				if isinstance(piece, King.King):
-					agent_king= piece
-			return not self.is_under_check("black") and len( agent_king.get_possible_actions(self) ) == 0
-		
+			return False
+
 
 	def last_row_reached_with_pawn(self,agent_color):
 		pawn_found= False
