@@ -16,6 +16,9 @@ class BoardTest(unittest.TestCase):
 		self.simple_capture_board= Board.Board("k11/111/1p1/P11/111/1K1")
 		self.stalemate_board= Board.Board("k11/P11/1K1/111/111/111")
 		self.last_row_reached_board= Board.Board("k11/111/111/111/111/p1K")
+		self.drawn_board=Board.Board("111/111/1k1/111/1K1/111")
+		self.reduced_two_by_five_board=Board.Board("k1/pp/11/PP/1K")
+
 		
 	def test_board_constructor(self):
 		self.assertEqual(self.board.rows_number, 6)
@@ -60,12 +63,23 @@ class BoardTest(unittest.TestCase):
 
 	def test_1_contains_square(self):
 		valid_square_key = "a1"
-		self.assertTrue(self.board.contains_square(valid_square_key))
-
-
-	def test_2_contains_square(self):
 		not_valid_square_key= "d4"
-		self.assertTrue(not self.board.contains_square(not_valid_square_key))
+		self.assertTrue(self.board.contains_square(valid_square_key))
+		self.assertFalse(self.board.contains_square(not_valid_square_key))
+
+	def test_contains_square_reduced(self):
+		self.assertTrue(self.reduced_two_by_five_board.contains_square("a1"))
+		self.assertTrue(self.reduced_two_by_five_board.contains_square("b1"))
+		self.assertTrue(self.reduced_two_by_five_board.contains_square("a2"))
+		self.assertTrue(self.reduced_two_by_five_board.contains_square("b2"))
+		self.assertTrue(self.reduced_two_by_five_board.contains_square("a3"))
+		self.assertTrue(self.reduced_two_by_five_board.contains_square("b3"))
+		self.assertTrue(self.reduced_two_by_five_board.contains_square("a4"))
+		self.assertTrue(self.reduced_two_by_five_board.contains_square("b4"))
+		self.assertTrue(self.reduced_two_by_five_board.contains_square("a5"))
+		self.assertTrue(self.reduced_two_by_five_board.contains_square("b5"))
+
+
 
 	def test_is_free_square(self):
 		self.assertTrue(self.board.is_free_square( "a1" ))
@@ -107,11 +121,16 @@ class BoardTest(unittest.TestCase):
 		self.assertFalse(self.stalemate_board.last_row_reached_with_pawn("white"))
 		self.assertFalse(self.checkmate_board.last_row_reached_with_pawn("black"))
 
+	def test_is_a_draw(self):
+		self.assertTrue(self.drawn_board.is_a_draw())
+		self.assertFalse(self.stalemate_board.is_a_draw())
+
 
 	def test_str__(self):
 		self.assertEqual(self.board.__str__(), "1k1/ppp/111/111/PPP/1K1")
 		self.assertEqual(self.check_board.__str__(), "111/111/1k1/111/p11/1K1")
 		self.assertEqual(self.checkmate_board.__str__(), "k11/1PP/K11/111/111/111")
+		self.assertEqual(self.reduced_two_by_five_board.__str__(),"k1/pp/11/PP/1K")
 
 
 	def tearDown(self):
@@ -121,6 +140,8 @@ class BoardTest(unittest.TestCase):
 		self.simple_capture_board= None
 		self.stalemate_board= None
 		self.last_row_reached_board= None
+		self.drawn_board= None
+		self.reduced_two_by_five_board= None
 
        
 if __name__ == '__main__':

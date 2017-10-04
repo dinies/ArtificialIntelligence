@@ -1,7 +1,6 @@
 from src import State
 from src import Action
 import random
-import pdb
 
 class LearningSim(object):
 	"""docstring for LearningSim"""
@@ -17,19 +16,20 @@ class LearningSim(object):
 
 	def montecarlo_epoque_exec(self,iteration_num,epoque_num):
 		epoque= self.generate_epoque(iteration_num,epoque_num)
-		self.update_tables(epoque,iteration_num,epoque_num)
+		return self.update_tables(epoque,iteration_num,epoque_num)
 
 		
 
 	def update_tables(self,epoque,iteration_num,epoque_num):
 		[last_state, last_action, last_turn] = epoque[len(epoque)-1]
+		winner= last_state.get_winner()
+		(white_rew, black_rew)= last_state.get_reward()
+		epoque.pop(len(epoque)-1)
 
-		if not last_state.is_losing_state_for_agent(last_turn) :
-			reward_epoque= 0
-		else:
-			reward_epoque= last_state.get_reward(self.agent_chosen)
-			epoque.pop(len(epoque)-1)
 
+
+		length_epoque= len(epoque)
+		index= 0
 
 		#then for every state action pair in the epoque
 		# if the turn was of white then update Q table with reward_epoque_scaled
@@ -37,14 +37,14 @@ class LearningSim(object):
 		# logic : agent learn Q entries both from moves made by him but also
 		# from the moves made from the opponent
 
-		
 		#execute montecarlo for every state in episode
 		for  [ state , action , turn] in epoque :
-
-			if turn== self.agent_chosen:
-				reward= reward_epoque
+			index+=1
+			discount_coeff= 0.2+ (index/length_epoque) * 0.8
+			if turn== "white":
+				reward= white_rew * discount_coeff
 			else:
-				reward= -reward_epoque
+				reward= black_rew * discount_coeff
 			
 			#database   get avg of rewards for this pair state action
 			past_avg_rewards= self.database.get_rewards_in_R(state.__str__(),action.__str__())
@@ -61,6 +61,7 @@ class LearningSim(object):
 
 		#update the Q_table in DB ( the policy follows strictly from the Q_table)
 		#register the epoch number and iteration number in DB table
+		return winner
 	   
 	def generate_epoque(self,iteration_num,epoque_num):
 		#generate episode retriving Q_table entries for current_state and choose the next action following softmax policy with e-greedy
@@ -68,7 +69,7 @@ class LearningSim(object):
 		state = self.initial_state
 		turn= "white"
 		state_action_tuples= []
-		while step_number <= self.max_epoque_steps and not state.is_losing_state_for_agent(turn):
+		while step_number <= self.max_epoque_steps and not state.is_final_state_for_agent(turn):
 			if turn == "white":
 				possible_actions= state.possible_actions("white")
 			else:
@@ -88,7 +89,7 @@ class LearningSim(object):
 				turn= "black"
 			else:
 				turn= "white"
-		if state.is_losing_state_for_agent(turn):
+		if state.is_final_state_for_agent(turn):
 			state_action_tuples.append( [state, None, turn ])
 
 		return state_action_tuples
@@ -100,11 +101,13 @@ class LearningSim(object):
 	def choose_action(self,state, possible_actions, epoque_num, turn):
 		if turn == self.agent_chosen :
 			#epsilon greedy
-			epsilon =  1 - (epoque_num/self.tot_of_epoques)
+			epsilon =  1.05 - (epoque_num/self.tot_of_epoques)
 			if epsilon < random.random() or self.totally_greedy_flag :
+				
 				#exploitation
 				if self.database.check_Q_entry_existence(state.__str__(), turn):
-					chosen_action_str= self.database.get_best_action_from_Q(state.__str__(),turn)
+					best_actions_str_list= self.database.get_best_actions_from_Q(state.__str__(),turn)
+					[chosen_action_str]= random.sample(best_actions_str_list,1)
 					chosen_action= Action.Action(action_string= chosen_action_str, board=state.board)
 					return chosen_action
 		#exploration

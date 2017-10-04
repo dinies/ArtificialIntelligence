@@ -7,16 +7,26 @@ class State(object):
 		self.board= Board.Board(board_state)
 		self.winner= None  #maybe useless
 
-	def is_losing_state_for_agent(self,agent_color):
+	def is_final_state_for_agent(self,agent_color):
 		if agent_color=="white":
 			opponent_color= "black"
 		else:
 			opponent_color="white"
-		return  self.board.last_row_reached_with_pawn(opponent_color) or self.board.is_under_checkmate(agent_color,self) or self.board.is_under_stalemate(agent_color,self)
+		return self.board.is_a_draw() or self.board.last_row_reached_with_pawn(opponent_color) or self.board.is_under_checkmate(agent_color,self) or self.board.is_under_stalemate(agent_color,self)
 	
 
 	def get_winner(self):
-		pass
+
+		winner= None
+		if  not self.board.is_a_draw() or not self.board.is_under_stalemate("white",self) or not self.board.is_under_stalemate("black",self):
+			if self.board.last_row_reached_with_pawn("white") or self.board.is_under_checkmate("black",self):
+				winner= "white"
+			if self.board.last_row_reached_with_pawn("black") or self.board.is_under_checkmate("white",self):
+				winner= "black"
+
+		return winner
+
+		
 
 	def possible_actions(self, agent_color):
 		if agent_color == "white" :
@@ -27,20 +37,19 @@ class State(object):
 			return self.discard_not_admissible_actions( self.board.black.possible_actions , "black")
 
 
-	def get_reward(self, agent_color):
-		if self.board.is_under_stalemate("black",self) or self.board.is_under_stalemate("white",self):
-			return -5
-		else:
-			if self.board.last_row_reached_with_pawn("white") or self.board.is_under_checkmate("black",self):
-				if agent_color== "white":
-					return 100
-				else:
-					return -100
-			if self.board.last_row_reached_with_pawn("black") or self.board.is_under_checkmate("white",self):
-				if agent_color== "white":
-					return -100
-				else:
-					return 100
+	def get_reward(self):
+		if self.board.is_under_stalemate("black",self):
+			return ( -1, 1 )
+		if self.board.is_under_stalemate("white",self):
+			return ( 1,-1 )
+		
+		if self.board.last_row_reached_with_pawn("white") or self.board.is_under_checkmate("black",self):
+			return ( 100, -100)
+		if self.board.last_row_reached_with_pawn("black") or self.board.is_under_checkmate("white",self):
+			return ( -100, 100)
+		if self.board.is_a_draw():
+			return ( 1, 1 )
+		return (-10,-10)
 
 	
 	def discard_not_admissible_actions(self, possible_actions, agent_color):

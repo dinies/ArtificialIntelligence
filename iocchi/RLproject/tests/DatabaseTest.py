@@ -40,6 +40,8 @@ class DatabaseTest(unittest.TestCase):
 		Qvalues=[
 		["1k1/ppp/111/111/PPP/1K1", "K.a2-a1", sum([-5,-100,-52])/3,"white"],
 		["1k1/ppp/111/111/PPP/1K1", "K.a2-c1", 100,"white"],
+		["1k1/p1p/111/111/P1P/1K1", "p.c5-c4", 80,"black"],
+		["1k1/p1p/111/111/P1P/1K1", "p.a5-a4", 80,"black"]
 		]
 		self.cursor=self.true_db.cursor()
 
@@ -121,21 +123,21 @@ class DatabaseTest(unittest.TestCase):
 		self.assertEqual("white",result[3])
 
 
-	def test_get_best_white_action_from_Q(self):
-		result= self.db_under_test.get_best_action_from_Q("1k1/ppp/111/111/PPP/1K1", "white")
+	def test_get_best_white_actions_from_Q(self):
+		result= self.db_under_test.get_best_actions_from_Q("1k1/ppp/111/111/PPP/1K1", "white")
 
-		self.assertEqual( result, "K.a2-c1" )
+		self.assertEqual( result, ["K.a2-c1"] )
 
-	def test_get_best_black_action_from_Q(self):
-		result= self.db_under_test.get_best_action_from_Q("1k1/ppp/111/111/PPP/1K1", "black")
+	def test_get_best_black_multiple_actions_from_Q(self):
+		result= self.db_under_test.get_best_actions_from_Q("1k1/p1p/111/111/P1P/1K1", "black")
 
-		self.assertEqual( result, None )
+		self.assertEqual( result, [ "p.a5-a4", "p.c5-c4"] )
 
 	def test_check_Q_entry_existence(self):
 		self.assertTrue( self.db_under_test.check_Q_entry_existence("1k1/ppp/111/111/PPP/1K1","white"))
 		self.assertFalse( self.db_under_test.check_Q_entry_existence("1k1/ppp/111/111/PPP/1K1","black"))
 		self.assertFalse( self.db_under_test.check_Q_entry_existence("111/ppp/1k1/111/PPP/1K1","white"))
-		self.assertFalse( self.db_under_test.check_Q_entry_existence("111/ppp/1k1/111/PPP/1K1","black"))
+		self.assertTrue( self.db_under_test.check_Q_entry_existence("1k1/p1p/111/111/P1P/1K1","black"))
 
 	# def test_get_last_epoque_number(self):
 	# 	result= self.db_under_test.get_last_epoque_number(2)
@@ -167,12 +169,12 @@ class DatabaseTest(unittest.TestCase):
 	def test_get_black_avg_reward_in_Q(self):
 		result= self.db_under_test.get_avg_reward_in_Q("black")
 
-		self.assertEqual(result, None )
+		self.assertEqual(result, 80.00 )
 
 	def test_get_size_of_Q(self):
 		result= self.db_under_test.get_size_of_Q()
 
-		self.assertEqual(result, 2 )
+		self.assertEqual(result, 4 )
 
 
 

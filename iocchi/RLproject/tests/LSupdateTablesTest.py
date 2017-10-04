@@ -120,18 +120,17 @@ class LSupdateTables(unittest.TestCase):
 
 		
 		Rvalues_check= [
-		["1k1/ppp/111/111/PPP/1K1", "P.c2-c3",100,"white",2,1],
-		["1k1/ppp/111/11P/PP1/1K1", "k.b6-a6",-100,"black",2,1],
-		["k11/ppP/111/1p1/P11/1K1", "P.c5-c6",100,"white",2,1],
+		["1k1/ppp/111/111/PPP/1K1", "P.c2-c3",47,"white",2,1],
+		["1k1/ppp/111/11P/PP1/1K1", "k.b6-a6",-73,"black",2,1],
+		["k11/ppP/111/1p1/P11/1K1", "P.c5-c6",100,"white",2,1]
 		]
 
 		Qvalues_check=[
-		["1k1/ppp/111/111/PPP/1K1", "P.c2-c3", 0.00, "white"],
-		["1k1/ppp/111/11P/PP1/1K1", "k.b6-a6", 0.00, "black"],
+		["1k1/ppp/111/111/PPP/1K1", "P.c2-c3", -26.67, "white"],
+		["1k1/ppp/111/11P/PP1/1K1", "k.b6-a6", 13.33, "black"],
 		["k11/ppP/111/1p1/P11/1K1", "P.c5-c6", 100.00, "white"],
 		
 		]
-
 
 		for vec in Rvalues_check:
 			cursor.execute(queries[4], (vec[0], vec[1], vec[2], vec[3], vec[4],vec[5]))

@@ -1,0 +1,22 @@
+\contentsline {part}{I\hspace {1em}Introduction}{1}
+\contentsline {part}{II\hspace {1em}Development}{2}
+\contentsline {section}{\numberline {1}Overview}{2}
+\contentsline {section}{\numberline {2}Implementative Solution }{3}
+\contentsline {subsection}{\numberline {2.1}Low Level Logic}{3}
+\contentsline {subsection}{\numberline {2.2}High Level Logic}{4}
+\contentsline {subsection}{\numberline {2.3}Monte Carlo Learning Theory}{5}
+\contentsline {subsection}{\numberline {2.4}Database Integration}{6}
+\contentsline {subsubsection}{\numberline {2.4.1} R and Q tables}{7}
+\contentsline {subsection}{\numberline {2.5}Unit Testing}{9}
+\contentsline {subsubsection}{\numberline {2.5.1}Test Suite}{9}
+\contentsline {subsubsection}{\numberline {2.5.2}TDD}{9}
+\contentsline {subsection}{\numberline {2.6}Visualising Scenarios}{10}
+\contentsline {section}{\numberline {3}Results}{11}
+\contentsline {subsection}{\numberline {3.1}Displaying an episode}{11}
+\contentsline {subsection}{\numberline {3.2}Totally Greedy}{12}
+\contentsline {subsection}{\numberline {3.3}P table}{13}
+\contentsline {subsection}{\numberline {3.4}Experiments}{13}
+\contentsline {subsubsection}{\numberline {3.4.1}Simple Case}{13}
+\contentsline {subsubsection}{\numberline {3.4.2}Moderate Case}{15}
+\contentsline {subsubsection}{\numberline {3.4.3}Complex Case}{16}
+\contentsline {section}{\numberline {4}Conclusions}{17}

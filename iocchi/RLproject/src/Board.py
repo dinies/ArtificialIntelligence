@@ -4,14 +4,12 @@ from src import Agent
 from src import Pawn
 from src import King
 from src import State
-import pdb
 import string
 
 class Board(object):
 	"""docstring for Board"""
 	def __init__(self, board_state):
 		self.squares= {}
-		self.pieces= []
 		self.white = Agent.Agent("white", self)
 		self.black = Agent.Agent("black", self)
 		self.columns_number=0
@@ -138,19 +136,6 @@ class Board(object):
 			return False
 
 
-
-		# if agent_color == "white":
-		# 	for piece in self.white.pieces:
-		# 		if isinstance(piece, King.King):
-		# 			agent_king= piece
-		# 	return self.is_under_check("white") and len( agent_king.get_possible_actions(self) ) == 0
-		# else:
-		# 	for piece in self.black.pieces:
-		# 		if isinstance(piece, King.King):
-		# 			agent_king= piece
-		# 	return self.is_under_check("black") and len( agent_king.get_possible_actions(self) ) == 0
-		
-	
 	def is_under_stalemate(self, agent_color, state):
 		if not self.is_under_check(agent_color):
 			if agent_color=="white":
@@ -182,11 +167,39 @@ class Board(object):
 						pawn_found= True
 		return pawn_found
 
+	def is_a_draw(self):
+		return len(self.white.pieces)==1 and len(self.black.pieces)==1 and isinstance(self.white.pieces[0],King.King) and isinstance(self.black.pieces[0],King.King)
+
+
 	def parse_int(self,s):
 		try:
 			return int(s)
 		except ValueError:
 			return -1
+
+	def display(self):
+		inv_parsing_list= list(self.squares.keys())
+		board_state_string= ""
+		col_count= 0
+		row_count= 1
+		while len(inv_parsing_list) > 0 :
+			s_key= inv_parsing_list.pop(0)
+			col_count += 1
+			square = self.squares[s_key]
+			if square.is_occupied() :
+				char= "[ "+ square.piece.__str__() + " ]"
+			else:
+				char= "[   ]"
+			board_state_string = board_state_string + char
+			if col_count >= self.columns_number :
+				col_count =0
+				row_count +=1
+				if row_count <= self.rows_number :
+					board_state_string= board_state_string + "\n"
+		board_state_string= board_state_string + "\n\n"
+
+		print(board_state_string)
+
 
 
 	def __eq__(self, other):
@@ -200,7 +213,6 @@ class Board(object):
 
 	def __hash__(self):
 		return hash(self.__dict__.values())
-
 
 	def __str__(self):
 		inv_parsing_list= list(self.squares.keys())
@@ -216,7 +228,7 @@ class Board(object):
 			else:
 				char= str(1)
 			board_state_string = board_state_string + char
-			if col_count >= 3 :
+			if col_count >= self.columns_number :
 				col_count =0
 				row_count +=1
 				if row_count <= self.rows_number :

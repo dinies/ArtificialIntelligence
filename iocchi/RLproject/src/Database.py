@@ -52,10 +52,15 @@ class Database(object):
 		except:
 			self.db.rollback()
 
-	def get_best_action_from_Q(self, state_str,turn):
+	def get_best_actions_from_Q(self, state_str,turn):
 		q= "SELECT ACTION FROM QTABLE WHERE STATE=%s AND TURN=%s AND REWARD IN ( SELECT MAX(REWARD) FROM QTABLE WHERE STATE=%s AND TURN=%s)"
 		cursor = self.db.cursor()
 		cursor.execute(q, (state_str,turn,state_str,turn))
+
+		data= cursor.fetchall()
+		actions= [ r[0] for r in data ]
+		return actions
+
 		data= cursor.fetchone()
 		if data is None:
 			return None
@@ -125,11 +130,20 @@ class Database(object):
 		data= cursor.fetchone()
 		return data[0]
 
-	def save_performances_in_P(self,iteration_num,epoque_num,white_avg_R_rew,white_avg_Q_rew,black_avg_R_rew,black_avg_Q_rew,Q_size):
-		query= "INSERT INTO PTABLE(ITERATION,EPOQUE,WAVGR,WAVGQ,BAVGR, BAVGQ, QSIZE)VALUES(%s,%s,%s,%s,%s,%s,%s)"
+	def get_states_of_game(self,epoque_num,iteration_num):
+		cursor = self.db.cursor()
+		get_query= "SELECT STATE FROM RTABLE WHERE epoque=%s AND iteration=%s"
+		cursor.execute( get_query, ( str(epoque_num),str(iteration_num)))
+		data= cursor.fetchall()
+		states= [ r[0] for r in data ]
+		return states
+
+
+	def save_performances_in_P(self,iteration_num,epoque_num,white_avg_R_rew,white_avg_Q_rew,black_avg_R_rew,black_avg_Q_rew,Q_size,winner):
+		query= "INSERT INTO PTABLE(ITERATION,EPOQUE,WAVGR,WAVGQ,BAVGR, BAVGQ, QSIZE, WINNER)VALUES(%s,%s,%s,%s,%s,%s,%s,%s)"
 		cursor = self.db.cursor()
 		try:
-			cursor.execute(query, (iteration_num,epoque_num, white_avg_R_rew,white_avg_Q_rew,black_avg_R_rew,black_avg_Q_rew,Q_size))
+			cursor.execute(query, (iteration_num,epoque_num, white_avg_R_rew,white_avg_Q_rew,black_avg_R_rew,black_avg_Q_rew,Q_size,winner))
 			self.db.commit()
 		except:
 			self.db.rollback()
@@ -161,7 +175,7 @@ class Database(object):
 
 		create_R="CREATE TABLE RTABLE (ID INTEGER PRIMARY KEY AUTO_INCREMENT,STATE  VARCHAR(100) NOT NULL,ACTION  VARCHAR(10) NOT NULL,REWARD INT,TURN VARCHAR(10),EPOQUE INT,ITERATION INT );"
 		create_Q="CREATE TABLE QTABLE (STATE  VARCHAR(100) NOT NULL,ACTION  VARCHAR(10) NOT NULL,REWARD FLOAT(2),TURN VARCHAR(10),PRIMARY KEY(STATE,ACTION));"
-		create_P="CREATE TABLE PTABLE (ITERATION INT NOT NULL,EPOQUE INT NOT NULL, WAVGR FLOAT(2), WAVGQ FLOAT(2), BAVGR FLOAT(2), BAVGQ FLOAT(2), QSIZE INT, PRIMARY KEY(ITERATION, EPOQUE));"
+		create_P="CREATE TABLE PTABLE (ITERATION INT NOT NULL,EPOQUE INT NOT NULL, WAVGR FLOAT(2), WAVGQ FLOAT(2), BAVGR FLOAT(2), BAVGQ FLOAT(2), QSIZE INT, WINNER VARCHAR(10), PRIMARY KEY(ITERATION, EPOQUE));"
 
 		cursor.execute(create_R)
 		cursor.execute(create_Q)

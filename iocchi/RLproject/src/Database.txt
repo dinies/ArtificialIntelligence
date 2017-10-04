@@ -1,65 +1,7 @@
-Database
+Database credentials
 
 db_name: chessqboard
 db_name: chessqtest
 
 user_name: 'chessagent'@'localhost' pass: chessagent
 user_name: 'chesstester'@'localhost' pass: chesstester
-
-TODO
-there is the problem that when i ask the best action in Q then there is not division between actions of white player and actions of black, then I shuold add a field in both tables R and Q which will record which one has made the move.
-
-Refactor first DatabaseTest, then Database.py then recreate all the new tables in the chessqboard DB and finally check
-
-Interesting statistic should be the comparison of the cumulative reward that both agents (white with qlearning and black with random choices will score) in fact this should be enougth to show the improvement due to learning.
-
-initialize db chessQboard
-CREATE TABLE RTABLE (ID INTEGER PRIMARY KEY AUTO_INCREMENT,STATE  VARCHAR(100) NOT NULL,ACTION  VARCHAR(10) NOT NULL,REWARD INT,TURN VARCHAR(10),EPOQUE INT,ITERATION INT );
-
-CREATE TABLE QTABLE (STATE  VARCHAR(100) NOT NULL,ACTION  VARCHAR(10) NOT NULL,REWARD FLOAT(2),TURN VARCHAR(10),PRIMARY KEY(STATE,ACTION));
-
-CREATE TABLE PTABLE (ITERATION INT NOT NULL,EPOQUE INT NOT NULL, WAVGR FLOAT(2), WAVGQ FLOAT(2), BAVGR FLOAT(2), BAVGQ FLOAT(2), QSIZE INT, PRIMARY KEY(ITERATION, EPOQUE));
-
-INSERT INTO RTABLE (state, action, reward, turn , epoque, iteration) VALUES ("1k1/ppp/111/111/PPP/1K1","K.a2-a1","0","white","0","0");
-
-
-Tables:
-
-Qtable
-
-state action avg_reward turn
-
-PrimaryKey(state,action)
-
-
-
-
-R_table
-
-auto_id  state action reward turn n_epoque n_iteration  
-
-PrimaryKey(auto_id)
-
-views:
-
-epoques
-
-number    avg_reward
-
-
-P_table    performance statistics
-
-iteration epoque white_avg_R_rew white_avg_Q_rew  black_avg_R_rew black_avg_Q_rew Q_size
-
-
-Queries
-
-insert Qentry
-update Qentry
-
-insert Rentry
-
-get avg_rew from Rtable
-
-get max n_epoque
-get max n_iteration

@@ -39,7 +39,7 @@ class LearningSimTest(unittest.TestCase):
 
 		current_final_state=epoque[len(epoque)-1][0]
 		self.assertTrue(isinstance(epoque[len(epoque)-1][0] , State.State))
-		self.assertTrue( current_final_state.is_losing_state_for_agent("white") or current_final_state.is_losing_state_for_agent("black") or len(epoque)>= self.max_epoque_steps)
+		self.assertTrue( current_final_state.is_final_state_for_agent("white") or current_final_state.is_final_state_for_agent("black") or len(epoque)>= self.max_epoque_steps)
 
 		[state, action, turn] = random.sample(epoque,1)[0]
 		self.assertTrue(isinstance(state , State.State))
