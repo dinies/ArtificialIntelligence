@@ -1,0 +1,7 @@
+Database credentials
+
+db_name: chessqboard
+db_name: chessqtest
+
+user_name: 'chessagent'@'localhost' pass: chessagent
+user_name: 'chesstester'@'localhost' pass: chesstester

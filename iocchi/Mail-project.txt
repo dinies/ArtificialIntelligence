@@ -1,0 +1,50 @@
+Salve professore,
+
+le vorrei sottoporre la mia idea per il progetto valido per la valutazione dell'esame AI di settembre.
+
+Vorrei applicare il Q-learning ad un problema formalizzato nel seguente modo:
+
+- spunto di partenza: fase finale di una partita a scacchi in una scacchiera molto ridotta in dimensioni.
+
+- caratteristiche : 
+	Limitato numero di pezzi di modo da semplificare la formulazione e limitare l'esplosione di stati possibili ( un re da ambo le parti affiancato da alcuni pedoni come si puo vedere nell'immagine allegata).
+	
+	Un agente agisce secondo la policy ottimale ottenuta tramite Q-learning mentre l'altro agisce in modo randomico.
+	
+	La partita finisce appena un pedone giunge alla fine oppure se si verifica uno scacco matto .
+
+
+- implementazione :
+
+	Modellare lo stato della partita con un dizionario in cui sono presenti le posizioni dei vari pezzi sulla scacchiera.
+
+	Definire funzioni che analizzino lo stato della scacchiera fornendo informazioni riguardo: pezzi minacciati e azioni eseguibili.
+	
+	Decidere con quale criterio assegnare le rewards per ogni azione ( es. reward positiva se i pezzi sono avanzati verso la fine della scacchiera , negativa se vengono minacciati dai pezzi avversari una volta che sono stati mossi ).
+
+	Applicare il Q-learning interfacciandosi con il codice fornito in mdp.py
+
+- problemi :
+	
+	La quantita di stati raggiungibili dipende da un fattore random che sarebbe la mossa dell'avversario, decisa appunto randomicamente.
+
+	Quindi come faccio a creare un set che comprenda tutti gli stati raggiungibili ( ho pensato di computare tutti gli stati applicando tutte le azioni eseguibili ad ogni stato in maniera ricorsiva creando idalmente una struttura ad albero in cui riconosco i cicli e cerco di raggiungere una copertura completa di tutte gli stati, limitando pero' la ricerca ad una profondita prefissata per limitare la complessita') ?
+
+	La complessita' dovrebbe crescere di un fattore exp(2N) dove N sono le azioni eseguibili ad ogni stato. 
+	Devo limitarmi ad una scacchiera ancora piu piccola con ancora meno pezzi ( una possibilita' e' raffigurata in allegato) ? 
+
+	E' necessario che io possieda un set completo di stati oppure posso utilizzare l'algoritmo di learning fornendo solo lo stato iniziale e la funzione di transizione ?
+
+
+Secondo lei si puo' provare ad implementare ?
+
+La ringrazio per il suo tempo e spero di aver esposto con sufficiente chiarezza l'idea.
+
+Rimango in attesa,
+
+Cordialmente
+
+Edoardo Ghini
+
+
+

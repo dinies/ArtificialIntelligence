@@ -1,0 +1,18 @@
+%libro(_,_,_,1234567)
+
+
+%check_ISBN_order( [ libro(_,_,_,1234567) , libro(_,_,_,9234567) ]).
+
+
+
+
+extract_ISBN_in_list( [] , [])
+extract_ISBN_in_list( [ libro(_,_,_,X) | Tail ] , [X,Rest] ):- extract_ISBN_in_list( Tail ).
+
+
+check_simple_list_order( [] ). 
+check_simple_list_order( [ H|[]] ). 
+check_simple_list_order( [ H1| [ H2|T2 ]] ):- H1 <= H2, check_simple_list([H2|T2]).
+
+
+check_ISBN_order( L ):- extract_ISBN_in_list( L, Isbn), check_simple_list_order( Isbn).
